@@ -35,11 +35,22 @@ const MailIcon = ({ className }: { className?: string }) => (
 );
 
 /**
+ * A flat capture of the head-office map, cropped to a wide band with the marker
+ * centred. It replaces the Google Maps embed that used to back this hero: the
+ * embed was over a megabyte of script and tiles, it sat above the fold so
+ * `loading="lazy"` never deferred it, and its live compositing layer left the
+ * heading and lede rendering pale until something forced a repaint. One 134KB
+ * image has none of those problems. "Open in Maps" below covers the case where
+ * someone actually wants to pan around.
+ */
+const MAP_IMAGE = '/img/maps/head-office.webp';
+
+/**
  * Contact page.
  *
- * The hero band carries a live Google map of the head office as its backdrop,
- * held well back so the heading and copy stay the thing you read. The two cards
- * straddle the boundary between the band and the page below it.
+ * The hero band carries a map of the head office as its backdrop, held well
+ * back so the heading and copy stay the thing you read. The two cards straddle
+ * the boundary between the band and the page below it.
  */
 export const ContactPage = ({
   address = DEFAULT_ADDRESS,
@@ -50,22 +61,22 @@ export const ContactPage = ({
   onSubmit,
   className,
 }: ContactPageProps) => {
-  const query = encodeURIComponent(address);
-  // The plain `output=embed` form needs no API key.
-  const mapEmbed = `https://www.google.com/maps?q=${query}&output=embed`;
-  const mapLink = `https://www.google.com/maps/search/?api=1&query=${query}`;
+  const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (
     <div className={cn('w-full bg-background', className)}>
       {/* ------------------------------------------------------------ hero */}
       <section className="relative isolate overflow-hidden bg-muted/60">
-        {/* map backdrop — pointer-events-none so it never swallows a scroll */}
-        <iframe
-          src={mapEmbed}
-          title="Map of the Deep Real Estate head office"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="pointer-events-none absolute inset-0 -z-10 h-full w-full border-0 opacity-70 grayscale-[0.25] dark:opacity-45 dark:invert"
+        {/* map backdrop — decorative, so it carries no alt text */}
+        <img
+          src={MAP_IMAGE}
+          alt=""
+          aria-hidden="true"
+          width={1920}
+          height={645}
+          fetchPriority="high"
+          decoding="async"
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-60 grayscale-[0.2] dark:opacity-35 dark:invert"
         />
         {/* wash, so headings sit on an even ground rather than on map detail */}
         <div
@@ -86,7 +97,9 @@ export const ContactPage = ({
             <h1 className="mt-3 text-3xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-4xl lg:text-[2.6rem]">
               {heading}
             </h1>
-            <p className="mt-3 text-[15px] leading-[1.55] text-foreground/75">{lede}</p>
+            {/* full-strength, same as the heading — over a map backdrop a
+                dimmed lede just reads as washed out */}
+            <p className="mt-3 text-[15px] leading-[1.55] text-foreground">{lede}</p>
 
             {/* deliberately quiet — the form below is the primary action here */}
             <a
