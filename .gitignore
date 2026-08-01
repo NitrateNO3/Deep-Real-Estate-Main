@@ -1,0 +1,15 @@
+# dependencies / build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# server logs — these contain absolute server paths and PHP notices
+error_log
+**/error_log
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# real credentials kept out of the repo
+admin/include/dbc.php.local
