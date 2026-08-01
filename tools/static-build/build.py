@@ -36,7 +36,7 @@ PAGES = {
     "SubmitProperty2.php": ("pid", ["1"]),
     "PropertiesDetails.php": ("pid", [str(i) for i in range(1, 13)]),
     "DevelopersDetails.php": ("did", [str(i) for i in range(1, 9)]),
-    "Maps_Detailed.php": ("mid", [str(i) for i in range(1, 7)]),
+    "Maps_Detailed.php": ("mid", [str(i) for i in range(1, 9)]),
     "LocationWiseProperty.php": ("loc", ["1", "2", "3", "4"]),
     "Doc_Open.php": None,
     "Maps_Google.php": None,

@@ -62,12 +62,21 @@ function demo_props() {
 }
 
 function demo_maps() {
-    $files = ['DLF_Phase_1.jpeg','DLF_Phase_2.jpeg','DLF_Phase_3.jpeg','DLF_Phase_4.jpeg',
-              '12MAp.png','Dharuhera.jpeg'];
-    $names = ['DLF Phase 1','DLF Phase 2','DLF Phase 3','DLF Phase 4','Sector 12 Map','Dharuhera'];
+    /* real files from admin/assets/maps — the sections mirror the ones the
+       live site groups its maps into */
+    $rows = [
+        ['Gurgaon Master Plan',   'Gurgaon.jpeg'],
+        ['DLF Phase 1',           'DLF_Phase_1.jpeg'],
+        ['DLF Phase 2',           'DLF_Phase_2.jpeg'],
+        ['DLF Phase 3',           'DLF_Phase_3.jpeg'],
+        ['DLF Phase 4',           'DLF_Phase_4.jpeg'],
+        ['Sushant Lok 1',         'Sushant_Lok_1.jpeg'],
+        ['South City 2',          'South_City_2.jpeg'],
+        ['Udyog Vihar',           'Udyog_Vihar_1_2_3_4_5.jpeg'],
+    ];
     $out = [];
-    foreach ($files as $i => $f) {
-        $out[] = ['mid' => $i + 1, 'map_name' => $names[$i], 'thumb_url' => $f, 'map_url' => $f];
+    foreach ($rows as $i => $r) {
+        $out[] = ['mid' => $i + 1, 'map_name' => $r[0], 'thumb_url' => $r[1], 'map_url' => $r[1]];
     }
     return $out;
 }
