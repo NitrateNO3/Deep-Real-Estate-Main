@@ -16,11 +16,11 @@ export type SiteFooterProps = {
 };
 
 const defaultExplore: FooterLink[] = [
-  { label: 'Home', href: '#' },
-  { label: 'About Us', href: '#' },
-  { label: 'Maps', href: '#' },
-  { label: 'Documents', href: '#' },
-  { label: 'Contact Us', href: '#' },
+  { label: 'Home', href: '#home-so-far' },
+  { label: 'About Us', href: '#about-page' },
+  { label: 'Maps', href: '#maps-page' },
+  { label: 'Documents', href: '#documents-page' },
+  { label: 'Contact Us', href: '#contact-page' },
 ];
 
 const defaultServices: FooterLink[] = [

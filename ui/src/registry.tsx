@@ -15,6 +15,7 @@ import * as FooterDemos from '@/components/sections/footer/site-footer.demo';
 import * as AboutDemos from '@/components/sections/about/about-page.demo';
 import * as MapsPageDemos from '@/components/sections/maps-page/maps-page.demo';
 import * as ContactPageDemos from '@/components/sections/contact-page/contact-page.demo';
+import * as DocumentsPageDemos from '@/components/sections/documents-page/documents-page.demo';
 
 export type PreviewEntry = {
   /** Unique slug, used in the URL hash. */
@@ -115,6 +116,13 @@ export const registry: PreviewEntry[] = [
     name: '★ Contact Us — full page',
     layout: 'full',
     render: () => <ContactPageDemos.ContactFullPage />,
+  },
+  {
+    id: 'documents-page',
+    group: 'Documents page',
+    name: '★ Documents — full page',
+    layout: 'full',
+    render: () => <DocumentsPageDemos.DocumentsFullPage />,
   },
   {
     id: 'about-page',

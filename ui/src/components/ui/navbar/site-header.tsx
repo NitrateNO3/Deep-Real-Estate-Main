@@ -54,7 +54,7 @@ const defaultItems: SiteNavItem[] = [
     label: 'More',
     href: '#',
     children: [
-      { label: 'Documents', href: '#', description: 'Forms, approvals & downloads' },
+      { label: 'Documents', href: '#documents-page', description: 'Forms, approvals & downloads' },
       { label: 'Developers', href: '#', description: 'Builders we work with' },
       { label: 'Sell Your Property', href: '#', description: 'List with us in minutes' },
       { label: 'FAQs', href: '#', description: 'Common questions, answered' },
