@@ -3,13 +3,31 @@ import { registry } from './registry';
 
 type Theme = 'light' | 'dark';
 
+/** The page a visitor should land on: the home page, not the first component. */
+const LANDING_ID = 'home-so-far';
+
+/*
+  The sandbox chrome is a development tool. On the deployed build the link goes
+  to clients, so it opens straight into the site itself — otherwise the first
+  thing they see is a sidebar full of component names.
+
+  ?full=1   forces the bare component (works everywhere, used by "Open full
+            screen" and for checking responsive breakpoints)
+  ?sandbox=1 forces the gallery back on, including on the deployed build
+*/
+const params = new URLSearchParams(window.location.search);
+const SHOW_SITE_ONLY = params.has('full') || (import.meta.env.PROD && !params.has('sandbox'));
+
 export default function App() {
   // Initial theme can be forced with ?theme=dark so a preview link is shareable.
   const [theme, setTheme] = useState<Theme>(() =>
     new URLSearchParams(window.location.search).get('theme') === 'dark' ? 'dark' : 'light',
   );
   const [activeId, setActiveId] = useState<string>(
-    () => window.location.hash.slice(1) || registry[0]?.id || '',
+    () =>
+      window.location.hash.slice(1) ||
+      (SHOW_SITE_ONLY ? LANDING_ID : registry[0]?.id) ||
+      '',
   );
 
   useEffect(() => {
@@ -44,15 +62,7 @@ export default function App() {
 
   const active = registry.find((e) => e.id === activeId) ?? registry[0];
 
-  /*
-    ?full=1 renders the component alone with no sandbox chrome, so the browser
-    viewport is the component's real viewport. Essential for judging responsive
-    breakpoints — with the sidebar visible, the preview pane is 256px narrower
-    than the viewport the media queries are matching against.
-  */
-  const isStandalone = new URLSearchParams(window.location.search).has('full');
-
-  if (isStandalone && active) {
+  if (SHOW_SITE_ONLY && active) {
     return <>{active.render()}</>;
   }
 
