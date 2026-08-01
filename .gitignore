@@ -13,3 +13,6 @@ Thumbs.db
 
 # real credentials kept out of the repo
 admin/include/dbc.php.local
+
+# static-export build workspace
+.static-build-tmp/
