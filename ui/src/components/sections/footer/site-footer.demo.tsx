@@ -5,6 +5,7 @@ import { BrandsSection } from '@/components/sections/brands/brands-section';
 import { MapsSection } from '@/components/sections/maps/maps-section';
 import { StatsBand } from '@/components/sections/stats/stats-band';
 import { PropertiesSection } from '@/components/sections/properties/properties-section';
+import { ReviewsSection } from '@/components/sections/reviews/reviews-section';
 import { ContactSection } from '@/components/sections/contact/contact-section';
 import { SiteFooter } from './site-footer';
 
@@ -19,17 +20,18 @@ export const Standalone = () => (
 );
 
 /**
- * The full home page — six screens.
+ * The full home page — seven screens.
  *   1 · header + search + welcome
  *   2 · ask about property
  *   3 · maps + stats strip
  *   4 · featured & top properties
- *   5 · contact + process flow
- *   6 · footer
+ *   5 · reviews
+ *   6 · contact + process flow
+ *   7 · footer
  */
 export const HomePage = () => (
-  <div className="h-dvh overflow-y-auto scroll-smooth bg-background lg:snap-y lg:snap-mandatory">
-    <section className="flex flex-col lg:h-dvh lg:snap-start">
+  <div className="min-h-dvh scroll-smooth bg-background">
+    <section className="flex flex-col lg:h-dvh">
       <div className="shrink-0">
         <SiteHeader activeIndex={0} />
         <SearchBand onSearch={(q) => console.log('search:', q)} />
@@ -39,11 +41,11 @@ export const HomePage = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <BrandsSection fill />
     </section>
 
-    <section className="flex flex-col lg:min-h-dvh lg:snap-start">
+    <section className="flex flex-col lg:min-h-dvh">
       <div className="lg:min-h-0 lg:flex-1">
         <MapsSection fill />
       </div>
@@ -52,17 +54,22 @@ export const HomePage = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <PropertiesSection fill />
     </section>
 
-    <section className="lg:min-h-dvh lg:snap-start">
+    {/* sized to its content: four cards do not need a whole viewport, and
+        padding them out to one would leave a gap between two full screens */}
+    <section>
+      <ReviewsSection />
+    </section>
+
+    <section className="lg:min-h-dvh">
       <ContactSection fill onSubmit={(v) => console.log('contact:', v)} />
     </section>
 
-    {/* The footer is its own snap target. It is shorter than a viewport, so
-        snap-start simply aligns its top and the scroll clamps at the end. */}
-    <section className="lg:snap-start">
+    {/* sized to its content — the footer is shorter than a viewport */}
+    <section>
       <SiteFooter />
     </section>
   </div>
