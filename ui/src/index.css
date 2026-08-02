@@ -149,6 +149,67 @@
   /* glowing search bar: slowly rotating ring behind the filter icon.
      Not a stock Tailwind utility — without this the ring is static. */
   --animate-spin-slow: spin-slow 4s linear infinite;
+
+  /* shadcn accordion. Declared here rather than pulled in with tw-animate-css,
+     which would be a whole dependency for two keyframes. */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  /* FAQ card: colour travelling around the border. */
+  --animate-border-run: border-run 6s linear infinite;
+
+  /* scroll cue: the wheel running down the mouse barrel. */
+  --animate-scroll-wheel: scroll-wheel 1.6s ease-in-out infinite;
+}
+
+@keyframes scroll-wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(11px);
+    opacity: 0;
+  }
+}
+
+/* The border is a conic gradient painted on a wrapper, with the card sitting
+   on top inset by the border width. Animating the angle needs the property to
+   be registered — a plain custom property is a string to the engine and would
+   jump from 0deg to 360deg instead of sweeping. */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-run {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/* Radix measures the panel and exposes its height as a custom property; the
+   keyframes just animate to and from it. */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 /* The animated element is a 600px ::before centred with translate(-50%,-50%).

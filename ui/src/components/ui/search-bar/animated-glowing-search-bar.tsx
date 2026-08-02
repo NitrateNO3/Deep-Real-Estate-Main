@@ -25,6 +25,11 @@ export type GlowingSearchBarProps = {
   name?: string;
   /** Fired on submit (Enter) with the trimmed query. */
   onSearch?: (query: string) => void;
+  /**
+   * Fired on every keystroke. For a bar that filters a list already on screen,
+   * where waiting for Enter would feel broken.
+   */
+  onQueryChange?: (query: string) => void;
   /** Accessible label for the input. */
   label?: string;
   className?: string;
@@ -35,6 +40,7 @@ const SearchComponent = ({
   defaultValue,
   name = 'q',
   onSearch,
+  onQueryChange,
   label = 'Search',
   className,
 }: GlowingSearchBarProps) => {
@@ -94,6 +100,7 @@ const SearchComponent = ({
             type="text"
             name={name}
             autoComplete="off"
+            onChange={(e) => onQueryChange?.(e.currentTarget.value)}
             className="bg-[var(--sb-field)] text-[var(--sb-field-text)] placeholder:text-[var(--sb-placeholder)] border-none w-full h-[56px] rounded-lg px-[59px] text-lg focus:outline-none"
           />
           <div id="input-mask" className="pointer-events-none w-[100px] h-[20px] absolute bg-gradient-to-r from-transparent to-[var(--sb-field)] top-[18px] left-[70px] group-focus-within:hidden"></div>
