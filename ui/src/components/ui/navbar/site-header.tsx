@@ -41,26 +41,19 @@ export type SiteHeaderProps = {
 const defaultItems: SiteNavItem[] = [
   { label: 'Home', href: '#home-so-far' },
   { label: 'About Us', href: '#about-page' },
-  {
-    label: 'Projects',
-    href: '#',
-    children: [
-      { label: 'Residential', href: '#', description: 'Apartments, floors, plots & villas' },
-      { label: 'Commercial', href: '#', description: 'Offices, retail & investment space' },
-    ],
-  },
+  { label: 'FAQs', href: '#faqs-page' },
   { label: 'Maps', href: '#maps-page' },
+  { label: 'Contact Us', href: '#contact-page' },
   {
     label: 'More',
     href: '#',
     children: [
       { label: 'Documents', href: '#documents-page', description: 'Forms, approvals & downloads' },
-      { label: 'Developers', href: '#', description: 'Builders we work with' },
-      { label: 'Sell Your Property', href: '#', description: 'List with us in minutes' },
-      { label: 'FAQs', href: '#', description: 'Common questions, answered' },
+      // pages not built yet — the labels are in place, the links are not
+      { label: 'Privacy Policy', href: '#', description: 'How we handle your details' },
+      { label: 'Terms and Conditions', href: '#', description: 'The terms of using this site' },
     ],
   },
-  { label: 'Contact Us', href: '#contact-page' },
 ];
 
 /* The real mark from the live site. The bar is navy in both themes now, so the
@@ -131,7 +124,9 @@ export const SiteHeader = ({
   ctaLabel = 'Sell Your Property',
   ctaHref = '#',
   activeIndex = 0,
-  showThemeToggle = true,
+  // the site ships light-only; the toggle stays available as a prop for the
+  // sandbox, but no page offers it
+  showThemeToggle = false,
   className,
 }: SiteHeaderProps) => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);

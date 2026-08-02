@@ -25,18 +25,17 @@ export const Standalone = () => (
  *   3 · featured & top properties
  *
  * The strip rides at the bottom of screen 2 rather than standing between the
- * two screens. At 104px it is far too short to be a snap target of its own, and
- * anything stranded between two mandatory snap points can become unreachable.
- * Riding the bottom of the maps screen puts it exactly where it was asked for —
- * after maps, before properties — while staying reachable.
+ * two screens. At 104px it is far too short to hold a screen of its own, and
+ * riding the bottom of the maps screen puts it exactly where it was asked for —
+ * after maps, before properties.
  *
  * Screen 2 alone is `min-h-dvh`, since it is the one now carrying the extra
  * 104px and would otherwise overlap on a short laptop. 1 and 3 are locked to
  * `h-dvh`.
  */
 export const HomeSoFar = () => (
-  <div className="h-dvh overflow-y-auto scroll-smooth bg-background lg:snap-y lg:snap-mandatory">
-    <section className="flex flex-col lg:h-dvh lg:snap-start">
+  <div className="min-h-dvh scroll-smooth bg-background">
+    <section className="flex flex-col lg:h-dvh">
       <div className="shrink-0">
         <SiteHeader activeIndex={0} />
         <SearchBand onSearch={(q) => console.log('search:', q)} />
@@ -46,7 +45,7 @@ export const HomeSoFar = () => (
       </div>
     </section>
 
-    <section className="flex flex-col lg:min-h-dvh lg:snap-start">
+    <section className="flex flex-col lg:min-h-dvh">
       <div className="lg:min-h-0 lg:flex-1">
         <MapsSection fill />
       </div>
@@ -55,7 +54,7 @@ export const HomeSoFar = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <PropertiesSection fill />
     </section>
   </div>

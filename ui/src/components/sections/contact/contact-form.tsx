@@ -39,9 +39,11 @@ export const ContactForm = ({ onSubmit, compact = false, className }: ContactFor
   };
 
   // Filled fields with a real border read as "type here"; hairline-on-white
-  // outlines read as decoration.
+  // outlines read as decoration. The outline carries the brand blue at rest
+  // too, so the form looks like one coloured object rather than grey boxes.
   const field = cn(
-    'w-full rounded-xl border border-border bg-muted/50 text-foreground placeholder:text-muted-foreground/60 transition-all',
+    'w-full rounded-xl border-2 border-primary/30 bg-primary/[0.04] text-foreground placeholder:text-muted-foreground/60 transition-all',
+    'hover:border-primary/50',
     'focus:border-primary focus:bg-background focus:outline-none focus:ring-4 focus:ring-primary/15',
     compact ? 'px-3.5 py-2.5 text-sm' : 'px-4 py-3 text-[15px]',
   );

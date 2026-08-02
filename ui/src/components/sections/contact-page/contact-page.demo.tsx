@@ -11,8 +11,8 @@ import { ContactPage } from './contact-page';
  */
 export const ContactFullPage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
-    {/* activeIndex 5 puts the limelight on Contact Us */}
-    <SiteHeader activeIndex={5} />
+    {/* activeIndex 4 puts the limelight on Contact Us */}
+    <SiteHeader activeIndex={4} />
     <ContactPage onSubmit={(v) => console.log('contact:', v)} />
     <SiteFooter />
   </div>

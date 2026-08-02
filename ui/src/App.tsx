@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { registry } from './registry';
 
 type Theme = 'light' | 'dark';
@@ -29,6 +29,9 @@ export default function App() {
       (SHOW_SITE_ONLY ? LANDING_ID : registry[0]?.id) ||
       '',
   );
+  /* The sandbox's own scroll container. In ?full=1 the window scrolls instead,
+     so both are reset when the page changes. */
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -36,6 +39,16 @@ export default function App() {
 
   useEffect(() => {
     if (activeId) window.location.hash = activeId;
+  }, [activeId]);
+
+  /* Arriving at a page puts you at the top of it.
+     Switching entries only swaps what renders — the scroll offset belongs to
+     the container, not to the page, so without this you land wherever the
+     previous page happened to be scrolled to. `instant` because a page change
+     is not a movement within a page; smooth-scrolling it reads as a glitch. */
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeId]);
 
   /* Follow hash changes, so an in-page link (the nav's Home / About Us) can
@@ -144,7 +157,9 @@ export default function App() {
         </header>
 
         {active.layout === 'full' ? (
-          <div className="flex-1 overflow-y-auto">{active.render()}</div>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto">
+            {active.render()}
+          </div>
         ) : (
           <div className="grid flex-1 place-items-center p-10">{active.render()}</div>
         )}

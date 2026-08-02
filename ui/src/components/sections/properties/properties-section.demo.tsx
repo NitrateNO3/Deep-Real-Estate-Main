@@ -12,12 +12,12 @@ export const Standalone = () => (
 );
 
 /**
- * The home page so far — three screens, one section each, snap-scrolled.
+ * The home page so far — three screens, one section each, scrolled normally.
  * 1 · header + search + welcome   2 · maps   3 · featured & top properties
  */
 export const HomeSoFar = () => (
-  <div className="h-dvh overflow-y-auto scroll-smooth bg-background lg:snap-y lg:snap-mandatory">
-    <section className="flex flex-col lg:h-dvh lg:snap-start">
+  <div className="min-h-dvh scroll-smooth bg-background">
+    <section className="flex flex-col lg:h-dvh">
       <div className="shrink-0">
         <SiteHeader activeIndex={0} />
         <SearchBand onSearch={(q) => console.log('search:', q)} />
@@ -27,11 +27,11 @@ export const HomeSoFar = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <MapsSection fill />
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <PropertiesSection fill />
     </section>
   </div>

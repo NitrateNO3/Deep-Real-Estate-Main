@@ -23,8 +23,8 @@ export const Standalone = () => (
  *   5 · contact form + process flow
  */
 export const HomeSoFar = () => (
-  <div className="h-dvh overflow-y-auto scroll-smooth bg-background lg:snap-y lg:snap-mandatory">
-    <section className="flex flex-col lg:h-dvh lg:snap-start">
+  <div className="min-h-dvh scroll-smooth bg-background">
+    <section className="flex flex-col lg:h-dvh">
       <div className="shrink-0">
         <SiteHeader activeIndex={0} />
         <SearchBand onSearch={(q) => console.log('search:', q)} />
@@ -34,11 +34,11 @@ export const HomeSoFar = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <BrandsSection fill />
     </section>
 
-    <section className="flex flex-col lg:min-h-dvh lg:snap-start">
+    <section className="flex flex-col lg:min-h-dvh">
       <div className="lg:min-h-0 lg:flex-1">
         <MapsSection fill />
       </div>
@@ -47,11 +47,11 @@ export const HomeSoFar = () => (
       </div>
     </section>
 
-    <section className="lg:h-dvh lg:snap-start">
+    <section className="lg:h-dvh">
       <PropertiesSection fill />
     </section>
 
-    <section className="lg:min-h-dvh lg:snap-start">
+    <section className="lg:min-h-dvh">
       <ContactSection fill onSubmit={(v) => console.log('contact:', v)} />
     </section>
   </div>

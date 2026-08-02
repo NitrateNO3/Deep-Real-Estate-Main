@@ -74,17 +74,21 @@ export const ContactSection = ({
 }: ContactSectionProps) => {
 
   return (
+    /* Two parts, each on its own ground: the form half on the light tint, the
+       "How we work" half on the navy the site uses for its dark bands. They
+       meet edge to edge, so the colour change is the split. */
     <section
       className={cn(
-        'w-full bg-gradient-to-b from-muted/60 via-background to-muted/40',
-        fill && 'lg:flex lg:h-full lg:min-h-0 lg:items-center',
+        'grid w-full grid-cols-1 lg:grid-cols-2',
+        fill && 'lg:h-full lg:min-h-0',
         className,
       )}
     >
+      {/* =============================================== part 1 · contact */}
       <div
         className={cn(
-          'mx-auto w-full max-w-[1400px] px-5 sm:px-8',
-          fill ? 'py-14 lg:py-10' : 'py-20 sm:py-24',
+          'flex flex-col justify-center bg-[#eef4f9] px-5 sm:px-8 lg:px-10 xl:px-14',
+          fill ? 'py-14 lg:py-10' : 'py-16 sm:py-20',
         )}
       >
         {/* ------------------------------------------------------- header */}
@@ -96,7 +100,7 @@ export const ContactSection = ({
             </p>
           </div>
           <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
-            Let&apos;s find your address.
+            Tell us what you&apos;re looking for.
           </h2>
           <p className="mt-4 max-w-xl text-[17px] leading-[1.6] text-muted-foreground">
             Tell us the sector, the budget and the timeline. We will come back to you on the
@@ -128,41 +132,47 @@ export const ContactSection = ({
           </div>
         </div>
 
-        <div
-          className={cn(
-            'grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12',
-            fill ? 'mt-8' : 'mt-12',
-          )}
-        >
-          {/* -------------------------------------------------- form card */}
-          <div className="lg:col-span-7">
-            <ContactForm onSubmit={onSubmit} compact={fill} />
-          </div>
-
-          {/* ----------------------------------------------- process flow */}
-          <div className="lg:col-span-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              How it works
-            </p>
-            <ol className="relative mt-6">
-              <span
-                aria-hidden="true"
-                className="absolute left-[19px] top-3 bottom-10 w-px bg-border"
-              />
-              {steps.map((s) => (
-                <li key={s.step} className="relative flex gap-5 pb-6 last:pb-0">
-                  <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-primary bg-background text-xs font-bold text-primary">
-                    {s.step}
-                  </span>
-                  <div className="pt-1.5">
-                    <h3 className="text-[15px] font-semibold text-foreground">{s.title}</h3>
-                    <p className="mt-1 text-sm leading-[1.6] text-muted-foreground">{s.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
+        {/* -------------------------------------------------- form card */}
+        <div className={cn(fill ? 'mt-8' : 'mt-10')}>
+          <ContactForm onSubmit={onSubmit} compact={fill} />
         </div>
+      </div>
+
+      {/* ========================================== part 2 · how we work */}
+      <div
+        className={cn(
+          'flex flex-col justify-center bg-[#0b1d2a] px-5 sm:px-8 lg:px-10 xl:px-14',
+          fill ? 'py-14 lg:py-10' : 'py-16 sm:py-20',
+        )}
+      >
+        <div className="flex items-center gap-3">
+          <span className="h-px w-8 bg-sky-400" />
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-400">
+            The process
+          </p>
+        </div>
+
+        <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
+          How we work
+        </h2>
+
+        <ol className="relative mt-10">
+          <span
+            aria-hidden="true"
+            className="absolute bottom-10 left-[19px] top-3 w-px bg-white/20"
+          />
+          {steps.map((s) => (
+            <li key={s.step} className="relative flex gap-5 pb-7 last:pb-0">
+              <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-sky-400 bg-[#0b1d2a] text-xs font-bold text-sky-400">
+                {s.step}
+              </span>
+              <div className="pt-1.5">
+                <h3 className="text-base font-semibold text-white">{s.title}</h3>
+                <p className="mt-1 text-sm leading-[1.6] text-white/65">{s.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

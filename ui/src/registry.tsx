@@ -16,6 +16,8 @@ import * as AboutDemos from '@/components/sections/about/about-page.demo';
 import * as MapsPageDemos from '@/components/sections/maps-page/maps-page.demo';
 import * as ContactPageDemos from '@/components/sections/contact-page/contact-page.demo';
 import * as DocumentsPageDemos from '@/components/sections/documents-page/documents-page.demo';
+import * as FaqsDemos from '@/components/sections/faqs/faqs-section.demo';
+import * as ReviewsDemos from '@/components/sections/reviews/reviews-section.demo';
 
 export type PreviewEntry = {
   /** Unique slug, used in the URL hash. */
@@ -97,6 +99,13 @@ export const registry: PreviewEntry[] = [
     render: () => <ContactDemos.Standalone />,
   },
   {
+    id: 'home-reviews',
+    group: 'Home page',
+    name: '6 · Reviews',
+    layout: 'full',
+    render: () => <ReviewsDemos.Standalone />,
+  },
+  {
     id: 'home-so-far',
     group: 'Home page',
     name: '★ Home page so far',
@@ -123,6 +132,20 @@ export const registry: PreviewEntry[] = [
     name: '★ Documents — full page',
     layout: 'full',
     render: () => <DocumentsPageDemos.DocumentsFullPage />,
+  },
+  {
+    id: 'faqs-page',
+    group: 'FAQs page',
+    name: '★ FAQs — full page',
+    layout: 'full',
+    render: () => <FaqsDemos.FaqsFullPage />,
+  },
+  {
+    id: 'faqs-section',
+    group: 'FAQs page',
+    name: '1 · FAQ accordion — standalone',
+    layout: 'full',
+    render: () => <FaqsDemos.Standalone />,
   },
   {
     id: 'about-page',

@@ -15,6 +15,42 @@ export type SiteFooterProps = {
   className?: string;
 };
 
+/**
+ * A social mark. Renders a link only when there is somewhere real to go —
+ * otherwise a plain span, so clicking it does nothing at all.
+ */
+const SocialMark = ({
+  href,
+  label,
+  children,
+}: {
+  href?: string;
+  label: string;
+  children: React.ReactNode;
+}) => {
+  const styles =
+    'grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 transition-all duration-200';
+
+  if (!href || href === '#') {
+    return (
+      <span aria-label={label} className={styles}>
+        {children}
+      </span>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className={cn(styles, 'hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white')}
+    >
+      {children}
+    </a>
+  );
+};
+
 const defaultExplore: FooterLink[] = [
   { label: 'Home', href: '#home-so-far' },
   { label: 'About Us', href: '#about-page' },
@@ -43,8 +79,8 @@ export const SiteFooter = ({
   address = 'G-564, Sushant Lok-II Extn. Sector 57, Nr. Scottish High Gurgaon, Haryana-122002, India',
   phone = '+91-9810922338',
   email = 'info@deeprealestate.in',
-  facebookHref = '#',
-  instagramHref = '#',
+  facebookHref,
+  instagramHref,
   explore = defaultExplore,
   services = defaultServices,
   copyright = '© Copyright 2005-2025 Deep Real Estate . All Rights Reserved | Managed By Asterisk Serve',
@@ -70,42 +106,38 @@ export const SiteFooter = ({
         <div className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-16">
           {/* brand */}
           <div className="lg:col-span-4">
-            <a href="#" className="flex items-center gap-2.5" aria-label="Deep Real Estate — home">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary text-primary-foreground">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                </svg>
-              </span>
-              <span className="leading-none">
-                <span className="block text-[16px] font-bold tracking-tight text-white">
-                  Deep Real Estate
-                </span>
-                <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.16em] text-white/45">
-                  Gurgaon · Since 2005
-                </span>
-              </span>
+            {/* the real wordmark, same asset the header uses — the drawn house
+                glyph here was a stand-in and read as a different company */}
+            <a
+              href="#home-so-far"
+              className="inline-flex shrink-0 items-center"
+              aria-label="Deep Real Estate — home"
+            >
+              <img
+                src="/img/logo/deep-logo-light.png"
+                alt="Deep Real Estate"
+                className="h-11 w-auto"
+              />
             </a>
+            <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white/45">
+              Gurgaon · Since 2005
+            </p>
 
             <p className="mt-5 max-w-sm text-sm leading-[1.7] text-white/55">
               Residential and commercial property across Gurgaon&apos;s sectors and DLF phases —
               matched to your budget, your location and your timeline.
             </p>
 
+            {/* No profile URLs yet, so these are marks rather than links.
+                Pointing them at "#" would clear the hash and drop you on a
+                different page — a redirect to nowhere is worse than no link. */}
             <div className="mt-6 flex items-center gap-3">
-              <a
-                href={facebookHref}
-                aria-label="Deep Real Estate on Facebook"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white"
-              >
+              <SocialMark href={facebookHref} label="Deep Real Estate on Facebook">
                 <Facebook className="h-[18px] w-[18px]" />
-              </a>
-              <a
-                href={instagramHref}
-                aria-label="Deep Real Estate on Instagram"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white"
-              >
+              </SocialMark>
+              <SocialMark href={instagramHref} label="Deep Real Estate on Instagram">
                 <Instagram className="h-[18px] w-[18px]" />
-              </a>
+              </SocialMark>
             </div>
           </div>
 

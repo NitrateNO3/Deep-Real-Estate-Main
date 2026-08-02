@@ -101,15 +101,24 @@ export const ContactPage = ({
                 dimmed lede just reads as washed out */}
             <p className="mt-3 text-[15px] leading-[1.55] text-foreground">{lede}</p>
 
-            {/* deliberately quiet — the form below is the primary action here */}
+            {/* filled in the brand blue, with the pin dropping on hover and a
+                soft pulse behind it so it reads as a live control */}
             <a
               href={mapLink}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-foreground/25 bg-background/80 px-4 py-2 text-[13px] font-semibold text-foreground backdrop-blur-sm transition-colors hover:border-foreground/40 hover:bg-background"
+              className="group relative mt-5 inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/35"
             >
-              <PinIcon className="h-4 w-4" />
-              Open in Maps
+              {/* sheen that sweeps across on hover */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 -translate-x-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent)] transition-transform duration-700 group-hover:translate-x-full"
+              />
+              <span aria-hidden="true" className="relative flex h-4 w-4 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/50 motion-reduce:animate-none" />
+                <PinIcon className="relative h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+              </span>
+              <span className="relative">Open in Maps</span>
             </a>
           </div>
         </div>

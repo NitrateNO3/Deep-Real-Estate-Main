@@ -1,4 +1,5 @@
 import { SiteHeader } from '@/components/ui/navbar/site-header';
+import { ScrollCue } from '@/components/ui/scroll-cue/scroll-cue';
 import { SiteFooter } from '@/components/sections/footer/site-footer';
 import { StatsBand } from '@/components/sections/stats/stats-band';
 import { AboutIntro } from './about-intro';
@@ -24,20 +25,25 @@ export const Mission = () => (
  * The About Us page.
  *   nav (limelight on About Us) → intro → mission & vision → footer
  *
- * Same snap rhythm as the home page, so moving between the two pages does not
- * change how scrolling behaves.
+ * Scrolls normally, same as every other page — screens are still sized to the
+ * viewport, but nothing snaps the scroll to their boundaries.
  */
 export const AboutPage = () => (
-  <div className="h-dvh overflow-y-auto scroll-smooth bg-background lg:snap-y lg:snap-mandatory">
+  <div className="min-h-dvh scroll-smooth bg-background">
     {/* min-h-dvh, not h-dvh: this screen now also carries the 104px stats strip,
         and on a short laptop the intro would otherwise collide with it. */}
-    <section className="flex flex-col lg:min-h-dvh lg:snap-start">
+    <section className="flex flex-col lg:min-h-dvh">
       <div className="shrink-0">
         {/* activeIndex 1 puts the limelight on About Us */}
         <SiteHeader activeIndex={1} />
       </div>
       <div className="lg:min-h-0 lg:flex-1">
         <AboutIntro fill />
+      </div>
+      {/* screen one ends exactly at the fold, so nothing tells you the page
+          carries on — this does, and takes you there */}
+      <div className="flex shrink-0 justify-center pb-4">
+        <ScrollCue targetId="about-mission" label="More below" />
       </div>
       {/* same strip as the home page, closing screen one */}
       <div className="shrink-0">
@@ -47,11 +53,10 @@ export const AboutPage = () => (
 
     {/* Sized to its content, not to a viewport. Forcing min-h-dvh here was what
         created the gap — the copy simply does not fill a full screen. */}
-    <section className="lg:snap-start">
+    <section id="about-mission" className="scroll-mt-20">
       <AboutMission />
     </section>
-
-    <section className="lg:snap-start">
+    <section>
       <SiteFooter />
     </section>
   </div>

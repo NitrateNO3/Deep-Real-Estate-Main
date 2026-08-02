@@ -45,13 +45,13 @@ export const InPage = () => (
   </div>
 );
 
-/** Just the bar, with "Projects" marked as the current page. */
+/** Just the bar, with "FAQs" marked as the current page. */
 export const HeaderOnly = () => (
   <div className="min-h-dvh bg-background">
     <SiteHeader activeIndex={2} />
     <div className="grid h-[60vh] place-items-center px-6 text-center text-sm text-muted-foreground">
       Hover the links — the limelight follows and resizes, then settles back on
-      the active page. &ldquo;Projects&rdquo; and &ldquo;More&rdquo; open dropdowns.
+      the active page. &ldquo;More&rdquo; opens a dropdown.
     </div>
   </div>
 );
@@ -60,7 +60,7 @@ export const HeaderOnly = () => (
 export const Minimal = () => (
   <div className="min-h-dvh bg-background">
     <SiteHeader
-      activeIndex={5}
+      activeIndex={4}
       phone={undefined}
       showThemeToggle={false}
       ctaLabel="Request a Callback"

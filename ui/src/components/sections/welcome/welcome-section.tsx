@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { StarButton } from '@/components/ui/star-button';
 import { useIsDark } from '@/lib/use-is-dark';
@@ -30,6 +30,10 @@ export type WelcomeSectionProps = {
   /** Put the picture on the left instead of the right. */
   reverse?: boolean;
   showActions?: boolean;
+  /** Element "Browse Properties" scrolls to — the featured properties block. */
+  propertiesSectionId?: string;
+  /** Where "Talk to us" goes. */
+  contactHref?: string;
   /**
    * Fill the remaining height of a viewport-height page instead of sizing to
    * content, so header + search + welcome occupy exactly one screen with no
@@ -65,9 +69,23 @@ export const WelcomeSection = ({
   interval = 3000,
   reverse = false,
   showActions = true,
+  propertiesSectionId = 'featured-properties',
+  contactHref = '#contact-page',
   fill = false,
   className,
 }: WelcomeSectionProps) => {
+  /* The sandbox routes on the hash, so href="#featured-properties" would be
+     read as a page id and land on the fallback entry. Scroll the section into
+     view directly — that works whether the window or the sandbox's own
+     container is doing the scrolling. If it isn't on the page (the section
+     rendered on its own), fall back to opening the home page. */
+  const handleBrowse = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    const target = document.getElementById(propertiesSectionId);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.location.hash = 'home-so-far';
+  };
+
   // The travelling light needs contrast against the button face, which flips
   // with the theme: near-white on the dark face, brand blue on the light one.
   const isDark = useIsDark();
@@ -150,14 +168,15 @@ export const WelcomeSection = ({
             {showActions && (
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <StarButton
-                  href="#"
+                  href={`#${propertiesSectionId}`}
+                  onClick={handleBrowse}
                   lightColor={isDark ? '#FAFAFA' : '#0080C6'}
                   className="h-12 px-7 text-[15px] font-semibold"
                 >
                   Browse Properties
                 </StarButton>
                 <a
-                  href="#"
+                  href={contactHref}
                   className="inline-flex items-center gap-1.5 rounded-full px-5 py-3.5 text-sm font-semibold text-foreground transition-colors hover:text-primary"
                 >
                   Talk to us

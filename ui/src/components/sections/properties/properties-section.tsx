@@ -146,9 +146,25 @@ const top: Property[] = [
   },
 ];
 
+/* Both tabs send you to the contact page rather than to a listing index —
+   the ask here is a conversation about a property, not another grid of them. */
 const defaultTabs: PropertyTab[] = [
-  { id: 'featured', label: 'Featured', ctaLabel: 'View all featured', accent: BLUE, items: featured },
-  { id: 'top', label: 'Top Properties', ctaLabel: 'View all properties', accent: GREEN, items: top },
+  {
+    id: 'featured',
+    label: 'Featured',
+    ctaLabel: 'Get more info',
+    ctaHref: '#contact-page',
+    accent: BLUE,
+    items: featured,
+  },
+  {
+    id: 'top',
+    label: 'Top Properties',
+    ctaLabel: 'Get more info',
+    ctaHref: '#contact-page',
+    accent: GREEN,
+    items: top,
+  },
 ];
 
 /**
@@ -202,8 +218,10 @@ export const PropertiesSection = ({
 
   return (
     <section
+      // the welcome section's "Browse Properties" scrolls here
+      id="featured-properties"
       className={cn(
-        'w-full bg-background',
+        'w-full scroll-mt-20 bg-background',
         fill && 'lg:flex lg:h-full lg:min-h-0 lg:items-center',
         className,
       )}
@@ -294,7 +312,7 @@ export const PropertiesSection = ({
             lightColor={isDark ? '#FAFAFA' : accent.from}
             className="h-12 px-7 text-[15px] font-semibold"
           >
-            {current?.ctaLabel ?? 'View all properties'}
+            {current?.ctaLabel ?? 'Get more info'}
           </StarButton>
         </div>
       </div>
