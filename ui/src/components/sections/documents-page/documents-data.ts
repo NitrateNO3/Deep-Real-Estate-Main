@@ -48,17 +48,10 @@ export const documents: DocumentItem[] = [
   { file: 'Format_of_Transfer_Deed__New.docx', title: 'Format of Transfer Deed', category: 'Formats', ext: 'docx', sizeKb: 17 },
 ];
 
-export const documentGroups: { category: DocCategory; blurb: string }[] = [
-  {
-    category: 'General',
-    blurb: 'Deeds, attorneys and receipts used in most private transactions.',
-  },
-  {
-    category: 'HUDA',
-    blurb: 'Affidavits and applications the HUDA / HSVP process asks for.',
-  },
-  {
-    category: 'Formats',
-    blurb: 'The newer drafting formats, for plots, floors and agricultural land.',
-  },
+/* Group order only. No descriptions: the live site does not caption these
+   groups, and a written-up sentence under each heading is padding. */
+export const documentGroups: { category: DocCategory }[] = [
+  { category: 'General' },
+  { category: 'HUDA' },
+  { category: 'Formats' },
 ];
