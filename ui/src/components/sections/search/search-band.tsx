@@ -3,8 +3,14 @@ import { cn } from '@/lib/utils';
 
 export type SearchBandProps = {
   heading?: string;
-  /** 'page' sits on the page background; 'dark' gives the glow a dark field. */
-  tone?: 'page' | 'dark';
+  /**
+   * 'page'        sits on the page background.
+   * 'dark'        gives the glow its own dark field.
+   * 'transparent' draws no ground at all, so whatever the parent is painting —
+   *               on the home page, the welcome gradient — runs straight
+   *               through the strip instead of being interrupted by it.
+   */
+  tone?: 'page' | 'dark' | 'transparent';
   onSearch?: (query: string) => void;
   className?: string;
 };
@@ -23,10 +29,17 @@ export const SearchBand = ({
   className,
 }: SearchBandProps) => {
   const isDark = tone === 'dark';
+  const isTransparent = tone === 'transparent';
 
   return (
     <section
-      className={cn('w-full border-b', isDark ? 'bg-[#07121b]' : 'bg-background', className)}
+      className={cn(
+        'w-full',
+        isTransparent
+          ? 'bg-transparent'
+          : cn('border-b', isDark ? 'bg-[#07121b]' : 'bg-background'),
+        className,
+      )}
     >
       <div className="mx-auto max-w-[1400px] px-5 py-5 sm:px-8">
         {/* 40% / rest, stated literally rather than approximated with a
@@ -47,7 +60,7 @@ export const SearchBand = ({
               <p
                 className={cn(
                   'text-xs font-semibold uppercase tracking-[0.18em] sm:text-[13px]',
-                  isDark ? 'text-white/60' : 'text-muted-foreground',
+                  isDark || isTransparent ? 'text-white/70' : 'text-muted-foreground',
                 )}
               >
                 {heading}

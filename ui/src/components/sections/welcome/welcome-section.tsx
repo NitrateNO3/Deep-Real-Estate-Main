@@ -14,17 +14,25 @@ const defaultGallery = [
 export type WelcomeSectionProps = {
   eyebrow?: string;
   heading?: string;
-  /** Largest paragraph — the pitch. */
+  /** The pitch — the section's only paragraph. */
   lead?: string;
-  /** Mid-size paragraph — the supporting detail. */
-  body?: string;
-  /** Smallest paragraph — the quiet closing note. */
-  note?: string;
+  /** Bold line of the trust badge that sits just above the buttons. */
+  trustTitle?: string;
+  /** Quiet second line of the trust badge. */
+  trustNote?: string;
   /** Single-image override. Supplying it collapses the gallery to one frame. */
   imageSrc?: string;
   imageAlt?: string;
   /** Gallery shown beside the copy. First entry is the opening frame. */
   images?: { src: string; alt: string }[];
+  /**
+   * Footage for the main frame. When set it replaces the gallery outright —
+   * the thumbnail rail exists to switch between stills and has nothing to
+   * switch between here. Pass '' to go back to the still gallery.
+   */
+  videoSrc?: string;
+  /** First frame, and what shows instead of the video under reduced motion. */
+  videoPoster?: string;
   /** Milliseconds between automatic advances. */
   interval?: number;
   /** Put the picture on the left instead of the right. */
@@ -58,14 +66,17 @@ export type WelcomeSectionProps = {
  *    line up exactly with the top and bottom of the text block.
  */
 export const WelcomeSection = ({
-  eyebrow = 'Welcome to Deep Real Estate',
-  heading = 'Property in Gurgaon, handled properly.',
-  lead = 'For two decades we have matched buyers, sellers and investors to the right address across Gurgaon’s sectors and DLF phases.',
-  body = 'Residential or commercial, we start from what you actually need — your budget, the location that works for you, and when you need possession — and put only genuine options in front of you.',
-  note = 'Every listing is personally verified before it reaches you. No padding, no dead ends.',
+  eyebrow = 'Gurugram · Manesar · Dharuhera · Sohna',
+  // Deliberate break: "Welcome to" is the greeting, the name is the statement.
+  heading = 'Welcome to\nDeep Realestate',
+  lead = 'Your search for the best suitable property as per your budget and desired location ends here. We have best Industry\'s top talent with technology to make the search and sell experience intelligent and seamless.',
+  trustTitle = 'Licensed & transparent',
+  trustNote = 'Serving Gurgaon since 2005',
   imageSrc,
   imageAlt = '',
   images = defaultGallery,
+  videoSrc = '/video/hero.mp4',
+  videoPoster = '/img/welcome.jpg',
   interval = 3000,
   reverse = false,
   showActions = true,
@@ -101,6 +112,7 @@ export const WelcomeSection = ({
      run at all under prefers-reduced-motion — an unrequested loop is exactly
      the kind of motion that setting exists to stop. */
   useEffect(() => {
+    if (videoSrc) return;
     if (gallery.length < 2) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -110,7 +122,19 @@ export const WelcomeSection = ({
     }, interval);
 
     return () => window.clearInterval(id);
-  }, [gallery.length, interval]);
+  }, [gallery.length, interval, videoSrc]);
+
+  /* Autoplaying footage is motion nobody asked for, so under
+     prefers-reduced-motion we hold the poster frame and never call play(). */
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.removeAttribute('autoplay');
+      el.pause();
+    }
+  }, [videoSrc]);
 
   return (
     <section
@@ -149,24 +173,48 @@ export const WelcomeSection = ({
               </p>
             </div>
 
-            {/* heading */}
-            <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem]">
+            {/* heading — whitespace-pre-line so the newline in the copy is the
+                line break, rather than leaving it to wherever the measure
+                happens to wrap */}
+            <h1 className="mt-5 whitespace-pre-line text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem]">
               {heading}
             </h1>
 
-            {/* paragraph 1 — lead */}
+            {/* the pitch */}
             <p className="mt-7 text-[19px] leading-[1.6] text-foreground/85">{lead}</p>
 
-            {/* paragraph 2 — body */}
-            <p className="mt-5 text-base leading-[1.7] text-muted-foreground">{body}</p>
-
-            {/* paragraph 3 — note */}
-            <p className="mt-5 border-l-2 border-border pl-4 text-sm leading-[1.7] text-muted-foreground">
-              {note}
-            </p>
+            {/* Trust badge. Sits directly above the buttons because it is the
+                reassurance you want in hand at the moment you click one. Tinted
+                panel + solid tick so it reads as a stamp, not a third paragraph;
+                inline-flex keeps it hugging its text instead of stretching to
+                the full measure. */}
+            {(trustTitle || trustNote) && (
+              /* Same gradient surface as <GradientButton>, applied through the
+                 shared class rather than the component: this is a statement,
+                 not a control, so it must not be a <button>. cursor-default
+                 undoes the pointer the class assumes. */
+              <div className="gradient-button mt-8 inline-flex cursor-default items-center gap-3.5 rounded-[11px] py-3 pl-3.5 pr-6 shadow-[0_16px_36px_-24px_rgb(0_0_0/0.9)]">
+                <span
+                  aria-hidden="true"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white/15 text-white"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m5 13 4 4L19 7" />
+                  </svg>
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[15px] font-bold leading-tight text-white">
+                    {trustTitle}
+                  </span>
+                  <span className="mt-1 block text-[13px] leading-tight text-white/70">
+                    {trustNote}
+                  </span>
+                </span>
+              </div>
+            )}
 
             {showActions && (
-              <div className="mt-9 flex flex-wrap items-center gap-3">
+              <div className="mt-7 flex flex-wrap items-center gap-3">
                 <StarButton
                   href={`#${propertiesSectionId}`}
                   onClick={handleBrowse}
@@ -206,27 +254,48 @@ export const WelcomeSection = ({
                 onMouseEnter={() => (paused.current = true)}
                 onMouseLeave={() => (paused.current = false)}
               >
-                {/* main frame — all slides stacked, crossfaded. On white the
-                    frame needs its own border and shadow to have an edge. */}
+                {/* main frame — the video, or all stills stacked and crossfaded.
+                    On white the frame needs its own border and shadow to have
+                    an edge. */}
                 <div className="relative aspect-[4/3] min-w-0 flex-1 overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)] lg:aspect-auto lg:h-full">
-                  {gallery.map((img, i) => (
-                    <img
-                      key={img.src}
-                      src={img.src}
-                      alt={i === active ? img.alt : ''}
-                      aria-hidden={i === active ? undefined : true}
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                      className={cn(
-                        'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out motion-reduce:transition-none',
-                        i === active ? 'opacity-100' : 'opacity-0',
-                      )}
+                  {videoSrc ? (
+                    <video
+                      ref={videoRef}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      src={videoSrc}
+                      poster={videoPoster}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-hidden="true"
+                      tabIndex={-1}
                     />
-                  ))}
+                  ) : (
+                    gallery.map((img, i) => (
+                      <img
+                        key={img.src}
+                        src={img.src}
+                        alt={i === active ? img.alt : ''}
+                        aria-hidden={i === active ? undefined : true}
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        className={cn(
+                          'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out motion-reduce:transition-none',
+                          i === active ? 'opacity-100' : 'opacity-0',
+                        )}
+                      />
+                    ))
+                  )}
                 </div>
 
-                {/* rail */}
+                {/* rail — stills only; there is nothing to switch to when the
+                    frame is playing footage */}
                 <div
-                  className="flex w-16 shrink-0 flex-col gap-2.5 lg:w-[92px] lg:gap-3"
+                  className={cn(
+                    'w-16 shrink-0 flex-col gap-2.5 lg:w-[92px] lg:gap-3',
+                    videoSrc ? 'hidden' : 'flex',
+                  )}
                   role="tablist"
                   aria-label="Gallery"
                 >

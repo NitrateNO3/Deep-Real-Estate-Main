@@ -46,9 +46,7 @@ export const HomeSoFar = () => (
     </section>
 
     <section className="flex flex-col lg:min-h-dvh">
-      <div className="lg:min-h-0 lg:flex-1">
-        <MapsSection fill />
-      </div>
+      <MapsSection fill className="lg:min-h-0 lg:flex-1" />
       <div className="shrink-0">
         <StatsBand />
       </div>

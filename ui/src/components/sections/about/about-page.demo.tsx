@@ -41,8 +41,10 @@ export const AboutPage = () => (
         <AboutIntro fill />
       </div>
       {/* screen one ends exactly at the fold, so nothing tells you the page
-          carries on — this does, and takes you there */}
-      <div className="flex shrink-0 justify-center pb-4">
+          carries on — this does, and takes you there. Symmetric padding, so the
+          cue is centred in its own strip rather than hanging off the bottom of
+          the copy and pressing against the stats band. */}
+      <div className="flex shrink-0 items-center justify-center py-5">
         <ScrollCue targetId="about-mission" label="More below" />
       </div>
       {/* same strip as the home page, closing screen one */}

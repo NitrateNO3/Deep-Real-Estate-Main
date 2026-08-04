@@ -86,8 +86,8 @@ export type ReviewsSectionProps = {
 export const ReviewsSection = ({
   items = reviews,
   eyebrow = 'What people said',
-  heading = 'What our clients say',
-  lede = 'Unedited, from our Google reviews.',
+  heading = 'Our Sweet Testimonials',
+  lede = 'Verified Google reviews from our valued clients',
   fill = false,
   className,
 }: ReviewsSectionProps) => (

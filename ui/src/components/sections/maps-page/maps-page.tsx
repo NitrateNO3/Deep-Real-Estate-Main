@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { ImageGallery, type GalleryItem } from '@/components/ui/image-gallery/image-gallery';
 import { Lightbox } from '@/components/ui/image-gallery/lightbox';
 import { SectionRail } from '@/components/ui/section-rail/section-rail';
+import GlowingSearchBar from '@/components/ui/search-bar/animated-glowing-search-bar';
 import { StarButton } from '@/components/ui/star-button';
 import { IndexCta } from '@/components/sections/index-cta/index-cta';
 import { mapSections, type MapSection } from './maps-data';
@@ -28,14 +29,20 @@ const COLLAPSE_OVER = 12;
 const MapsBand = ({
   section,
   tinted,
+  searching,
   onOpen,
 }: {
   section: MapSection;
   tinted: boolean;
+  /** A query is active, so nothing may stay hidden behind "show all". */
+  searching: boolean;
   onOpen: (item: GalleryItem) => void;
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const collapsible = section.maps.length > COLLAPSE_OVER;
+  /* Collapsing while filtering would hide the very thing that was searched
+     for — HUDA Sectors shows 12 of 34, so a match on Sector 57 would land
+     behind the button and read as "no result". */
+  const collapsible = !searching && section.maps.length > COLLAPSE_OVER;
   const shown = collapsible && !expanded ? section.maps.slice(0, COLLAPSE_OVER) : section.maps;
 
   return (
@@ -85,18 +92,41 @@ const MapsBand = ({
  */
 export const MapsPage = ({ sections = mapSections, className }: MapsPageProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
 
-  const flat = useMemo<GalleryItem[]>(
-    () => sections.flatMap((s) => s.maps),
-    [sections],
+  const q = query.trim().toLowerCase();
+  const searching = q.length > 0;
+
+  /* Match on the map's own name and on its section, so "huda" pulls the whole
+     sector run and "45" pulls the one sheet. Empty sections drop out entirely
+     rather than sitting there as headings with nothing under them. */
+  const visible = useMemo(
+    () =>
+      sections
+        .map((s) => ({
+          ...s,
+          maps: q
+            ? s.maps.filter(
+                (m) => m.name.toLowerCase().includes(q) || s.title.toLowerCase().includes(q),
+              )
+            : s.maps,
+        }))
+        .filter((s) => s.maps.length > 0),
+    [sections, q],
   );
+
+  /* The lightbox indexes across everything currently on screen, so the arrow
+     keys walk the filtered set — stepping off a search result into a map that
+     is not displayed would be disorienting. */
+  const flat = useMemo<GalleryItem[]>(() => visible.flatMap((s) => s.maps), [visible]);
   const indexOf = useMemo(() => {
     const m = new Map<string, number>();
     flat.forEach((item, i) => m.set(item.thumb, i));
     return m;
   }, [flat]);
 
-  const total = flat.length;
+  const total = useMemo(() => sections.reduce((n, s) => n + s.maps.length, 0), [sections]);
+  const shownCount = flat.length;
 
   return (
     <div className={cn('w-full bg-background', className)}>
@@ -128,29 +158,54 @@ export const MapsPage = ({ sections = mapSections, className }: MapsPageProps) =
             Master plans, DLF phases, HUDA sectors and builder projects — down to plot numbers.
             Tap any map to open it full size.
           </p>
+          {/* Same search bar and placement as the documents page — both are
+              long index pages and there is no reason for them to behave
+              differently. Thirty-four HUDA sectors is more than anyone should
+              have to scan by eye. */}
+          <div className="mt-8 max-w-xl">
+            <GlowingSearchBar
+              placeholder="Sector 45, DLF 3, Sushant Lok…"
+              label="Search maps"
+              onQueryChange={setQuery}
+              onSearch={setQuery}
+            />
+          </div>
+
           <p className="mt-6 text-sm font-semibold text-white">
-            {total} maps across {sections.length} sections
+            {searching
+              ? `${shownCount} of ${total} maps`
+              : `${total} maps across ${sections.length} sections`}
           </p>
         </div>
       </section>
 
-      {/* index rail — sticks under the header for the whole scroll */}
+      {/* index rail — sticks under the header for the whole scroll, and follows
+          the filter so its counts never disagree with what is on the page */}
       <SectionRail
         items={[
-          { label: 'All', count: total },
-          ...sections.map((s) => ({ id: sectionId(s.title), label: s.title, count: s.maps.length })),
+          { label: 'All', count: shownCount },
+          ...visible.map((s) => ({ id: sectionId(s.title), label: s.title, count: s.maps.length })),
         ]}
       />
 
       {/* one band per section, in the live site's order */}
-      {sections.map((section, i) => (
-        <MapsBand
-          key={section.title}
-          section={section}
-          tinted={i % 2 === 1}
-          onOpen={(item) => setOpenIndex(indexOf.get(item.thumb) ?? 0)}
-        />
-      ))}
+      {visible.length === 0 ? (
+        <div className="mx-auto w-full max-w-[1400px] px-5 py-24 sm:px-8">
+          <p className="text-center text-[15px] text-muted-foreground">
+            No map matches “{query.trim()}”.
+          </p>
+        </div>
+      ) : (
+        visible.map((section, i) => (
+          <MapsBand
+            key={section.title}
+            section={section}
+            tinted={i % 2 === 1}
+            searching={searching}
+            onOpen={(item) => setOpenIndex(indexOf.get(item.thumb) ?? 0)}
+          />
+        ))
+      )}
 
       <IndexCta
         heading="Can’t find your sector?"

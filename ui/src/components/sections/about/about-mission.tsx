@@ -1,4 +1,7 @@
+import { GradientButton } from '@/components/ui/gradient-button/gradient-button';
 import { cn } from '@/lib/utils';
+
+export type PartnerLogo = { name: string; src: string };
 
 export type AboutMissionProps = {
   eyebrow?: string;
@@ -6,36 +9,73 @@ export type AboutMissionProps = {
   lede?: string;
   beliefsIntro?: string;
   beliefs?: string[];
-  images?: { src: string; alt: string }[];
+  /** Panel beside the copy. */
+  partnersEyebrow?: string;
+  partnersHeading?: string;
+  partnersLede?: string;
+  /** Logo wall. Sixteen fills the 4×4 mosaic edge to edge with no remainder. */
+  partners?: PartnerLogo[];
+  ctaLine?: string;
+  /** Reassurance under the closing line. */
+  ctaNote?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
   fill?: boolean;
   className?: string;
 };
 
+/* The reference site's four, as it words them. */
 const defaultBeliefs = [
-  'Performance across all lines of business.',
-  'Delivering actual and tangible benefits to our clients.',
-  'Solid fundamentals.',
-  'Profitable Results',
+  'Performance across all lines of business',
+  'Delivering tangible benefits to clients',
+  'Solid fundamentals',
+  'Profitable results',
 ];
 
-const defaultImages = [
-  { src: '/img/about/mission-a.jpg', alt: 'Commercial development in Gurgaon' },
-  { src: '/img/about/mission-b.jpg', alt: 'Tower lobby of a Gurgaon residence' },
+/* Sixteen of the seventeen logos the home page marquee carries — 4×4 tiles the
+   mosaic exactly, and a seventeenth would leave three empty cells on the last
+   row and break the block edge the collage depends on. */
+const defaultPartners: PartnerLogo[] = [
+  { name: 'DLF', src: '/img/brands/dlf.png' },
+  { name: 'Emaar', src: '/img/brands/emaar.png' },
+  { name: 'Unitech', src: '/img/brands/unitech.png' },
+  { name: 'BPTP', src: '/img/brands/bptp.png' },
+  { name: 'Bestech', src: '/img/brands/bestech.png' },
+  { name: 'Parsvnath', src: '/img/brands/parsvnath.png' },
+  { name: 'Ansal API', src: '/img/brands/ansal-api.png' },
+  { name: 'Central Park', src: '/img/brands/central-park.png' },
+  { name: 'Spaze', src: '/img/brands/spaze.png' },
+  { name: 'Ansal Housing', src: '/img/brands/ansal-housing.png' },
+  { name: 'Suncity', src: '/img/brands/suncity.png' },
+  { name: 'Earth', src: '/img/brands/earth.png' },
+  { name: 'SS Group', src: '/img/brands/ss-group.png' },
+  { name: 'Antariksh', src: '/img/brands/antariksh.png' },
+  { name: 'Universal', src: '/img/brands/universal.png' },
+  { name: 'KLJ', src: '/img/brands/klj.png' },
 ];
 
 /**
  * About page — section 2.
  *
- * Copy left, two pictures side by side on the right. The pair share one fixed
- * aspect ratio so the row reads as a set rather than two unrelated crops.
+ * Copy left, partner-developer panel right, each taking half the width. The
+ * panel is one object: heading, a logo mosaic, and the closing ask, stacked
+ * inside a single card so the three read as one statement rather than three
+ * stray blocks.
  */
 export const AboutMission = ({
   eyebrow = 'What drives us',
   heading = 'Mission and vision',
-  lede = 'Deep Real Estate is committed to help you in making wise and profitable decisions in buying and selling of properties in Gurgaon. We Provide individuals and builders a better platform for realizing maximum profits out of real estate by understanding their needs.',
-  beliefsIntro = 'We believe in……',
+  lede = 'To help our clients make wise and profitable property decisions in Gurgaon — guiding every buyer and seller toward outcomes that genuinely serve their goals.',
+  beliefsIntro = 'We believe in:',
   beliefs = defaultBeliefs,
-  images = defaultImages,
+  partnersEyebrow = 'Partner developers',
+  partnersHeading = 'Trusted developer network',
+  partnersLede = "We work with Gurgaon's leading developers to bring you the widest choice of quality projects.",
+  partners = defaultPartners,
+  ctaLine = "Let's find your next property",
+  ctaNote = 'Talk to a licensed advisor today — no commission on free support.',
+  ctaLabel = 'Contact Us',
+  ctaHref = '#contact-page',
   fill = false,
   className,
 }: AboutMissionProps) => {
@@ -53,7 +93,7 @@ export const AboutMission = ({
           fill ? 'py-14 lg:py-10' : 'py-16 sm:py-24',
         )}
       >
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
           {/* copy */}
           <div className="min-w-0">
             <div className="flex items-center gap-3">
@@ -63,7 +103,7 @@ export const AboutMission = ({
               </p>
             </div>
 
-            <h2 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl">
+            <h2 className="mt-4 text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl">
               {heading}
             </h2>
 
@@ -71,40 +111,107 @@ export const AboutMission = ({
 
             <p className="mt-7 text-[15px] font-semibold text-foreground">{beliefsIntro}</p>
 
-            <ul className="mt-4 space-y-3">
-              {beliefs.map((b) => (
-                <li key={b} className="flex items-start gap-3">
-                  <span className="mt-[7px] grid h-4 w-4 shrink-0 place-items-center rounded-full bg-primary/15">
-                    <svg viewBox="0 0 24 24" className="h-2.5 w-2.5 text-primary" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
+            {/* Four cards rather than four bullets. A bulleted list reads as
+                an aside to the paragraph above it; as cards they carry the same
+                weight as the panel opposite, which is what these four claims
+                are meant to have. Numbered, not iconed — "Solid fundamentals"
+                has no honest glyph, and a guessed one is worse than none. */}
+            <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {beliefs.map((b, i) => (
+                <li
+                  key={b}
+                  /* The whole card takes the brand colour on hover, not just
+                     its border — a hairline going blue is a change you have to
+                     look for. The tint stays pale enough that the text keeps
+                     its contrast. */
+                  className="group/belief relative flex flex-col overflow-hidden rounded-2xl border bg-card p-4 shadow-[0_10px_28px_-22px_rgb(0_0_0/0.4)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-[linear-gradient(150deg,#eaf4fc_0%,#f7fbfe_55%,#e3eff9_100%)] hover:shadow-[0_20px_40px_-20px_rgb(0_128_198/0.55)]"
+                >
+                  {/* a wash that sweeps up from the bottom edge as you arrive */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-0 bg-[linear-gradient(0deg,rgb(0_128_198/0.14),transparent)] transition-[height] duration-500 ease-out group-hover/belief:h-full"
+                  />
+                  <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-primary/10 text-[13px] font-bold text-primary shadow-none transition-all duration-300 group-hover/belief:scale-110 group-hover/belief:bg-primary group-hover/belief:text-primary-foreground group-hover/belief:shadow-[0_8px_18px_-8px_rgb(0_128_198/0.95)]">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="text-[15px] leading-[1.6] text-muted-foreground">{b}</span>
+                  <span className="relative mt-3 text-[14px] font-medium leading-[1.5] text-foreground transition-colors duration-300 group-hover/belief:text-primary">
+                    {b}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* two pictures, side by side */}
-          <div className="grid grid-cols-2 gap-4 sm:gap-5">
-            {images.slice(0, 2).map((img, i) => (
-              <figure
-                key={img.src}
-                className={cn(
-                  'overflow-hidden rounded-2xl border bg-muted shadow-[0_20px_48px_-26px_rgb(0_0_0/0.35)]',
-                  /* a slight vertical offset on the second frame stops the pair
-                     reading as one image cut in half */
-                  i === 1 && 'lg:mt-10',
-                )}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  className="aspect-[3/4] w-full object-cover"
-                />
-              </figure>
-            ))}
+          {/* partner developers */}
+          <div className="group/panel min-w-0 overflow-hidden rounded-2xl border bg-card shadow-[0_20px_48px_-26px_rgb(0_0_0/0.35)] transition-all duration-500 hover:border-primary/40 hover:shadow-[0_26px_56px_-26px_rgb(0_128_198/0.45)]">
+            <div className="px-6 pb-5 pt-6 sm:px-7">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-8 bg-primary" />
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  {partnersEyebrow}
+                </p>
+              </div>
+              <h3 className="mt-3 text-2xl font-bold leading-tight tracking-tight text-foreground">
+                {partnersHeading}
+              </h3>
+              <p className="mt-2.5 text-[15px] leading-[1.6] text-muted-foreground">
+                {partnersLede}
+              </p>
+            </div>
+
+            {/* Logo mosaic. gap-0 with hairline dividers instead of gutters, so
+                the wall is one continuous block flush to the card's edges —
+                gutters would read as sixteen separate cards. Held back to 75%
+                opacity: sixteen full-strength logos would out-shout the copy
+                they are meant to support. */}
+            {/* Warm stone, not blue. Half these marks are themselves blue —
+                Bestech, Unitech, KLJ, Earth — and a blue ground flattened them
+                into it. A neutral warm wall is the gallery trick: it belongs to
+                none of the logos, so it sets all of them off. */}
+            <ul className="grid grid-cols-4 border-y border-border/70 bg-[linear-gradient(135deg,#f5f1e9_0%,#fbf9f4_50%,#efeae0_100%)]">
+              {partners.slice(0, 16).map((logo, i) => (
+                <li
+                  key={logo.src}
+                  className={cn(
+                    // flex, not grid: a grid item's min-height is auto, so
+                    // percentage heights on the logo resolved to nothing and
+                    // tall marks pushed straight out of their tile
+                    'flex aspect-[16/9] items-center justify-center overflow-hidden p-2.5',
+                    // each tile lifts to near-white on hover, so the one being
+                    // looked at separates from the wall
+                    'transition-colors duration-300 hover:bg-white/70',
+                    // no right rule on the last column, no bottom rule on the
+                    // last row — the card's own border closes those edges
+                    (i + 1) % 4 !== 0 && 'border-r border-border/70',
+                    i < 12 && 'border-b border-border/70',
+                  )}
+                >
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    loading="lazy"
+                    className="h-full w-full object-contain opacity-75 transition-opacity duration-300 hover:opacity-100"
+                  />
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 px-6 pb-6 pt-5 sm:px-7">
+              <div className="min-w-0">
+                <p className="text-[17px] font-semibold tracking-tight text-foreground">
+                  {ctaLine}
+                </p>
+                <p className="mt-1 text-[13px] leading-snug text-muted-foreground">{ctaNote}</p>
+              </div>
+              <GradientButton asChild className="shrink-0 gap-2 px-6 py-3 text-sm">
+                <a href={ctaHref}>
+                  {ctaLabel}
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </a>
+              </GradientButton>
+            </div>
           </div>
         </div>
       </div>

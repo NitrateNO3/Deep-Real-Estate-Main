@@ -7,6 +7,7 @@ import { StatsBand } from '@/components/sections/stats/stats-band';
 import { PropertiesSection } from '@/components/sections/properties/properties-section';
 import { ReviewsSection } from '@/components/sections/reviews/reviews-section';
 import { ContactSection } from '@/components/sections/contact/contact-section';
+import { IndexCta } from '@/components/sections/index-cta/index-cta';
 import { SiteFooter } from './site-footer';
 
 /** The footer on its own, over a short filler block. */
@@ -46,16 +47,36 @@ export const HomePage = () => (
     </section>
 
     <section className="flex flex-col lg:min-h-dvh">
-      <div className="lg:min-h-0 lg:flex-1">
-        <MapsSection fill />
-      </div>
+      {/* flex-1 lives on the section itself, not on a wrapper div. A wrapper
+          gets its height from flex-grow, which is a *used* height — so
+          MapsSection's own `h-full` resolved against `auto`, the section sized
+          to its content, and the slack underneath showed the page's plain white
+          through, right above the stats strip. Growing the section directly
+          sizes it with flex, which needs no percentage to resolve. */}
+      <MapsSection fill className="lg:min-h-0 lg:flex-1" />
       <div className="shrink-0">
         <StatsBand />
       </div>
     </section>
 
-    <section className="lg:h-dvh">
-      <PropertiesSection fill />
+    {/* Sized to its content. Forcing this one to a viewport was what put the
+        empty band above and below it — two cards and a column of copy simply
+        do not fill a screen. */}
+    <section>
+      <PropertiesSection />
+    </section>
+
+    {/* The ask, between what is on offer and what other people say about it.
+        Sized to its content — a band, not a screen. */}
+    <section>
+      <IndexCta
+        heading="Ready to buy or sell in Gurgaon?"
+        body="Get free, no-commission assistance from a licensed team."
+        ctaLabel="Get in touch"
+        ctaHref="#contact-page"
+        secondaryLabel="Call +91-9810922338"
+        secondaryHref="tel:+919810922338"
+      />
     </section>
 
     {/* sized to its content: four cards do not need a whole viewport, and
@@ -74,3 +95,4 @@ export const HomePage = () => (
     </section>
   </div>
 );
+

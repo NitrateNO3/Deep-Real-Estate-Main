@@ -10,10 +10,14 @@ export type AboutIntroProps = {
   className?: string;
 };
 
+/* Carried over from the reference site's About page, verbatim — including its
+   straight apostrophes, so this stays diffable against the source. It replaces
+   the old PHP page's copy, which said the same things at three times the
+   length. */
 const defaultParagraphs = [
-  'Your search for the best suitable property as per your budget and desired location ends here. We have best Industry’s top talent with technology to make the search and sell experience intelligent and seamless.',
-  'Purchasing your home or some commercial investment in Gurgaon through Deep Real Estate is always preferable. In addition to assisting clients in finding the best deal on their dream house, we are a fully-licensed Haryana real estate agency. To assist our clients in navigating the challenging Gurgaon real estate market, we have created a more streamlined, open, and customer-focused home purchase process.',
-  'We really put the needs of our clients first, and they consistently provide us with positive feedback. To learn what our customers had to say about the Deep Real Estate home buying experience, check out our Google reviews. We are passionate about each and every one of our customers having a positive Deep Real Estate experience.',
+  "Your search for the best suitable property as per your budget and desired location ends here. We have best Industry's top talent with technology to make the search and sell experience intelligent and seamless.",
+  'Deep Real Estate is a fully-licensed Haryana real-estate agency helping clients buy and sell property in the Gurgaon market through a streamlined, transparent, customer-focused process.',
+  "We combine the industry's top talent with technology to make the search and sell experience intelligent and seamless — across Gurugram, Manesar, Dharuhera and Sohna.",
 ];
 
 /**
@@ -23,8 +27,8 @@ const defaultParagraphs = [
  * rather than a 12-column span, whose real width shifts with the gap.
  */
 export const AboutIntro = ({
-  eyebrow = 'About us',
-  heading = 'Welcome to Deep Real Estate',
+  eyebrow = 'Established 2005',
+  heading = 'A licensed Haryana agency built on trust',
   paragraphs = defaultParagraphs,
   imageSrc = '/img/about/intro.jpg',
   imageAlt = 'Interior of a Gurgaon residence',

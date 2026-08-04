@@ -5,7 +5,9 @@ export type RailItem = {
   /** DOM id of the section this chip jumps to. Omit for the "All" chip. */
   id?: string;
   label: string;
-  count: number;
+  /** Optional tally. Omit where a number would be noise — a privacy policy's
+      chip does not want "7" after it. */
+  count?: number;
 };
 
 export type SectionRailProps = {
@@ -87,9 +89,11 @@ export const SectionRail = ({ items, trailing, className }: SectionRailProps) =>
                 )}
               >
                 {item.label}
-                <span className={cn('text-[11px]', isActive ? 'text-primary-foreground/70' : 'text-muted-foreground')}>
-                  {item.count}
-                </span>
+                {item.count != null && (
+                  <span className={cn('text-[11px]', isActive ? 'text-primary-foreground/70' : 'text-muted-foreground')}>
+                    {item.count}
+                  </span>
+                )}
               </button>
             );
           })}

@@ -48,9 +48,11 @@ const defaultRowTwo: Logo[] = [
  * deliberate; two rows going the same way looks like one broken row.
  */
 export const BrandsSection = ({
-  eyebrow = 'Developers we work with',
-  heading = 'Ask about property',
-  lede = 'Your search for the best suitable property as per your budget and desired location ends here. We have the best Industry’s top talent with technology to make the search and sell experience intelligent and seamless.',
+  eyebrow = 'Our Partners',
+  heading = 'Developers we work with',
+  /* No lede: this paragraph now opens the page, in the welcome section. Running
+     it again here would repeat the same sentences twice on one screen-scroll. */
+  lede = '',
   rowOne = defaultRowOne,
   rowTwo = defaultRowTwo,
   videoSrc = '/video/brands-bg.mp4',
@@ -133,7 +135,7 @@ export const BrandsSection = ({
             <h2 className="mt-5 text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-[2.6rem]">
               {heading}
             </h2>
-            <p className="mt-5 text-[16px] leading-[1.7] text-white/72">{lede}</p>
+            {lede && <p className="mt-5 text-[16px] leading-[1.7] text-white/72">{lede}</p>}
           </div>
         </div>
 

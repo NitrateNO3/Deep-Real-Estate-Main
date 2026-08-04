@@ -29,7 +29,7 @@ const SocialMark = ({
   children: React.ReactNode;
 }) => {
   const styles =
-    'grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 transition-all duration-200';
+    'grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/75 transition-all duration-200';
 
   if (!href || href === '#') {
     return (
@@ -87,7 +87,7 @@ export const SiteFooter = ({
   className,
 }: SiteFooterProps) => {
   const linkCls =
-    'text-sm text-white/60 transition-all duration-200 hover:text-white hover:pl-1';
+    'text-sm text-white/70 transition-all duration-200 hover:text-sky-300 hover:pl-1';
 
   return (
     <footer
@@ -119,11 +119,11 @@ export const SiteFooter = ({
                 className="h-11 w-auto"
               />
             </a>
-            <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white/45">
+            <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-sky-300/70">
               Gurgaon · Since 2005
             </p>
 
-            <p className="mt-5 max-w-sm text-sm leading-[1.7] text-white/55">
+            <p className="mt-5 max-w-sm text-sm leading-[1.7] text-white/70">
               Residential and commercial property across Gurgaon&apos;s sectors and DLF phases —
               matched to your budget, your location and your timeline.
             </p>
@@ -149,7 +149,7 @@ export const SiteFooter = ({
             <ul className="mt-6 space-y-4">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-primary" />
-                <span className="text-sm leading-[1.65] text-white/60">{address}</span>
+                <span className="text-sm leading-[1.65] text-white/70">{address}</span>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0 text-primary" />
@@ -207,7 +207,7 @@ export const SiteFooter = ({
 
         {/* bottom bar */}
         <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 sm:flex-row">
-          <p className="text-center text-xs text-white/45 sm:text-left">{copyright}</p>
+          <p className="text-center text-xs text-white/55 sm:text-left">{copyright}</p>
           <a
             href={`tel:${phone.replace(/[^\d+]/g, '')}`}
             className="text-xs font-semibold text-sky-300 transition-colors hover:text-white"

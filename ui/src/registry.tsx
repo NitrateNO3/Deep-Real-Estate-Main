@@ -18,6 +18,8 @@ import * as ContactPageDemos from '@/components/sections/contact-page/contact-pa
 import * as DocumentsPageDemos from '@/components/sections/documents-page/documents-page.demo';
 import * as FaqsDemos from '@/components/sections/faqs/faqs-section.demo';
 import * as ReviewsDemos from '@/components/sections/reviews/reviews-section.demo';
+import * as PrivacyDemos from '@/components/sections/privacy-page/privacy-page.demo';
+import * as TermsDemos from '@/components/sections/terms-page/terms-page.demo';
 
 export type PreviewEntry = {
   /** Unique slug, used in the URL hash. */
@@ -120,11 +122,32 @@ export const registry: PreviewEntry[] = [
     render: () => <MapsPageDemos.MapsFullPage />,
   },
   {
+    id: 'maps-page-old',
+    group: 'Maps page',
+    name: '(prev) Maps — sectioned bands',
+    layout: 'full',
+    render: () => <MapsPageDemos.MapsSectionedPage />,
+  },
+  {
     id: 'contact-page',
     group: 'Contact page',
     name: '★ Contact Us — full page',
     layout: 'full',
     render: () => <ContactPageDemos.ContactFullPage />,
+  },
+  {
+    id: 'privacy-page',
+    group: 'Privacy page',
+    name: '★ Privacy Policy — full page',
+    layout: 'full',
+    render: () => <PrivacyDemos.PrivacyFullPage />,
+  },
+  {
+    id: 'terms-page',
+    group: 'Terms page',
+    name: '★ Terms & Conditions — full page',
+    layout: 'full',
+    render: () => <TermsDemos.TermsFullPage />,
   },
   {
     id: 'documents-page',

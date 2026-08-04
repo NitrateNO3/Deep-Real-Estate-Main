@@ -50,8 +50,8 @@ const defaultItems: SiteNavItem[] = [
     children: [
       { label: 'Documents', href: '#documents-page', description: 'Forms, approvals & downloads' },
       // pages not built yet — the labels are in place, the links are not
-      { label: 'Privacy Policy', href: '#', description: 'How we handle your details' },
-      { label: 'Terms and Conditions', href: '#', description: 'The terms of using this site' },
+      { label: 'Privacy Policy', href: '#privacy-page', description: 'How we handle your details' },
+      { label: 'Terms and Conditions', href: '#terms-page', description: 'The terms of using this site' },
     ],
   },
 ];
@@ -88,7 +88,7 @@ const ThemeToggle = () => {
       type="button"
       onClick={toggle}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full border border-white/20 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+      className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full border border-white/20 text-white/75 transition-colors hover:bg-white/10 hover:text-white"
     >
       {isDark ? (
         <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -282,7 +282,7 @@ export const SiteHeader = ({
                   }}
                   className={cn(
                     'flex h-full items-center gap-1 whitespace-nowrap px-4 text-[15px] font-medium transition-colors xl:px-5',
-                    isActive ? 'text-white' : 'text-white/60 hover:text-white',
+                    isActive ? 'text-white' : 'text-white/70 hover:text-white',
                   )}
                 >
                   {item.label}
@@ -316,7 +316,7 @@ export const SiteHeader = ({
                           {child.label}
                         </span>
                         {child.description && (
-                          <span className="mt-0.5 block text-xs text-white/55">
+                          <span className="mt-0.5 block text-xs text-white/65">
                             {child.description}
                           </span>
                         )}

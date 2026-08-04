@@ -7,7 +7,7 @@ export type MapSection = { title: string; maps: MapItem[] };
 
 export const mapSections: MapSection[] = [
   {
-    "title": "Master Plan",
+    "title": "Master Plans",
     "maps": [
       {
         "name": "Masterplan",
@@ -72,7 +72,7 @@ export const mapSections: MapSection[] = [
     ]
   },
   {
-    "title": "All Huda Sectors",
+    "title": "HUDA Sectors",
     "maps": [
       {
         "name": "Sector 4 & 7",
@@ -317,7 +317,7 @@ export const mapSections: MapSection[] = [
     ]
   },
   {
-    "title": "Builder Project",
+    "title": "Builder Projects",
     "maps": [
       {
         "name": "Anant RAJ",

@@ -16,7 +16,7 @@ export type StatsBandProps = {
 const defaultStats: Stat[] = [
   { value: 900, label: 'Properties in hand' },
   { value: 25, label: 'Team strength' },
-  { value: 1200, label: 'Deals closed' },
+  { value: 1200, label: 'Happy clients' },
 ];
 
 const StatItem = ({ stat }: { stat: Stat }) => {
@@ -27,11 +27,11 @@ const StatItem = ({ stat }: { stat: Stat }) => {
       ref={ref as React.Ref<HTMLDivElement>}
       className="flex flex-col items-center justify-center px-4 text-center"
     >
-      <span className="text-2xl font-bold leading-none tracking-tight text-white sm:text-[28px]">
+      <span className="text-3xl font-bold leading-none tracking-tight text-white sm:text-[38px]">
         {value.toLocaleString('en-IN')}
         {stat.suffix ?? ''}
       </span>
-      <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/55">
+      <span className="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/55">
         {stat.label}
       </span>
     </div>
@@ -39,7 +39,7 @@ const StatItem = ({ stat }: { stat: Stat }) => {
 };
 
 /**
- * A ~104px credibility strip, not a section.
+ * A ~160px credibility strip, not a section.
  *
  * Deliberately short: it is a rule between two full sections, so it has no
  * heading, no padding to speak of, and one row of figures. The photograph is
@@ -54,7 +54,7 @@ export const StatsBand = ({
   return (
     <section
       className={cn(
-        'relative isolate flex h-[104px] w-full items-center overflow-hidden bg-[#06121b]',
+        'relative isolate flex h-[160px] w-full items-center overflow-hidden bg-[#06121b]',
         className,
       )}
     >

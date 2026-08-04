@@ -9,9 +9,14 @@ export type FlowStep = {
 
 export type { ContactValues };
 
+export type PhoneLine = {
+  number: string;
+  /** What the number is for — "Mobile", "Landline", "Free Support". */
+  label: string;
+};
+
 export type ContactSectionProps = {
-  phone?: string;
-  mobile?: string;
+  phones?: PhoneLine[];
   email?: string;
   steps?: FlowStep[];
   onSubmit?: (values: ContactValues) => void;
@@ -19,34 +24,34 @@ export type ContactSectionProps = {
   className?: string;
 };
 
+const defaultPhones: PhoneLine[] = [
+  { number: '+91-9810922338', label: 'Mobile' },
+  { number: '+91-124-4080100', label: 'Landline' },
+  { number: '+91-9599639738', label: 'Free Support' },
+];
+
 const defaultSteps: FlowStep[] = [
   {
     step: '01',
-    title: 'Reach us',
-    body: 'Call, write, or send the form. You get a person, not a ticket number.',
+    title: 'Reach Us',
+    body: 'Call or send an inquiry — we respond within 15 minutes during business hours.',
   },
   {
     step: '02',
-    title: 'Choose location',
-    body: 'Sector, phase or landmark — we narrow Gurgaon down to the pockets that fit you.',
+    title: 'Choose Location',
+    body: 'Pick your preferred sector or locality across the Gurgaon market.',
   },
   {
     step: '03',
-    title: 'Choose your property',
-    body: 'We shortlist, you visit. Only options that genuinely exist at the price quoted.',
+    title: 'Choose Property',
+    body: 'Shortlist from properties matched to your budget and requirements.',
   },
   {
     step: '04',
     title: 'Confirmation',
-    body: 'Registry, dues and possession handled end to end until the keys are yours.',
+    body: 'Close the deal with transparent documentation and full support.',
   },
 ];
-
-const PhoneIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.35 1.9.66 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.31 1.85.53 2.81.66A2 2 0 0 1 22 16.92z" />
-  </svg>
-);
 
 const MailIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -64,8 +69,7 @@ const MailIcon = ({ className }: { className?: string }) => (
  * so the white card has something to lift off.
  */
 export const ContactSection = ({
-  phone = '0124-4356789',
-  mobile = '+91 98110 00000',
+  phones = defaultPhones,
   email = 'info@deeprealestate.in',
   steps = defaultSteps,
   onSubmit,
@@ -74,12 +78,15 @@ export const ContactSection = ({
 }: ContactSectionProps) => {
 
   return (
-    /* Two parts, each on its own ground: the form half on the light tint, the
-       "How we work" half on the navy the site uses for its dark bands. They
-       meet edge to edge, so the colour change is the split. */
+    /* Blue-tinted, not white. The reviews band above is a neutral light grey
+       and this used to be plain white beside it — two pale grounds with nothing
+       between them, so the seam disappeared and the two sections read as one
+       long block. A blue cast separates them by hue while both stay light, and
+       the top rule makes the join explicit. The two halves keep their own step
+       of that blue so the form and the process are still told apart. */
     <section
       className={cn(
-        'grid w-full grid-cols-1 lg:grid-cols-2',
+        'grid w-full grid-cols-1 border-t border-primary/15 lg:grid-cols-2',
         fill && 'lg:h-full lg:min-h-0',
         className,
       )}
@@ -87,49 +94,72 @@ export const ContactSection = ({
       {/* =============================================== part 1 · contact */}
       <div
         className={cn(
-          'flex flex-col justify-center bg-[#eef4f9] px-5 sm:px-8 lg:px-10 xl:px-14',
+          'flex flex-col justify-center bg-[linear-gradient(165deg,#f1f7fc_0%,#e6f0f9_100%)] px-5 sm:px-8 lg:px-10 xl:px-14',
           fill ? 'py-14 lg:py-10' : 'py-16 sm:py-20',
         )}
       >
         {/* ------------------------------------------------------- header */}
         <div className="max-w-3xl">
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-primary" />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Contact us
-            </p>
-          </div>
-          <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
-            Tell us what you&apos;re looking for.
+          {/* The navbar's limelight, reused: a hot bar with a cone of light
+              spilling down from it. Same recipe as the active nav item, so the
+              page's two "this is the thing" markers are one idea. Fixed width
+              here rather than measured — it lights the heading, not a tab. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none relative z-0 block h-[3px] w-28 rounded-full bg-primary shadow-[0_0_18px_2px_var(--primary)]"
+          >
+            <span className="absolute left-[-30%] top-[3px] h-16 w-[160%] bg-gradient-to-b from-primary/25 to-transparent [clip-path:polygon(6%_100%,26%_0,74%_0,94%_100%)]" />
+          </span>
+
+          {/* No eyebrow — the heading says what this is, and a label above it
+              only repeated the point. */}
+          <h2 className="mt-7 text-4xl font-bold leading-[1.03] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+            {/* Same brand ramp as the Featured Properties title, so the page's
+                two big headings are cut from one cloth. */}
+            <span className="bg-[linear-gradient(100deg,#0b9ae0_0%,#0080c6_45%,#00618f_100%)] bg-clip-text text-transparent">
+              Tell us what you&apos;re looking for
+            </span>
           </h2>
           <p className="mt-4 max-w-xl text-[17px] leading-[1.6] text-muted-foreground">
-            Tell us the sector, the budget and the timeline. We will come back to you on the
-            number you leave.
+            Fill out our inquiry questionnaire and a member of our licensed team will reach out
+            — typically within 15 minutes during business hours (9am–10pm).
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <a
-              href={`tel:${phone}`}
-              className="inline-flex items-center gap-2 text-[15px] font-semibold text-foreground transition-colors hover:text-primary"
-            >
-              <PhoneIcon className="h-4 w-4 text-primary" />
-              {phone}
-            </a>
-            <a
-              href={`tel:${mobile}`}
-              className="inline-flex items-center gap-2 text-[15px] font-semibold text-foreground transition-colors hover:text-primary"
-            >
-              <PhoneIcon className="h-4 w-4 text-primary" />
-              {mobile}
-            </a>
-            <a
-              href={`mailto:${email}`}
-              className="inline-flex items-center gap-2 text-[15px] font-semibold text-primary hover:underline"
-            >
-              <MailIcon className="h-4 w-4" />
-              {email}
-            </a>
+          {/* All three numbers on one row. The per-number phone icons are gone:
+              at this width three icons are what pushed the row into wrapping,
+              and the caption after each number already says what it is.
+              flex-wrap is the fallback for narrow screens; tel: strips the
+              separators the display keeps.
+
+              Each number is marked with a highlighter — the same trick as the
+              testimonials heading (a background gradient that starts partway
+              down the line box, so it follows the text rather than sitting
+              behind it), in amber instead of blue. */}
+          <div className="mt-5 flex flex-wrap items-baseline gap-x-3.5 gap-y-2.5">
+            {phones.map((p) => (
+              <a
+                key={p.number}
+                href={`tel:${p.number.replace(/[^+\d]/g, '')}`}
+                className="inline-flex items-baseline gap-1 whitespace-nowrap transition-colors hover:text-primary"
+              >
+                <span className="box-decoration-clone bg-[linear-gradient(transparent_58%,rgb(245_158_11/0.5)_58%)] text-sm font-semibold text-foreground">
+                  {p.number}
+                </span>
+                <span aria-hidden="true" className="text-muted-foreground/50">
+                  ·
+                </span>
+                <span className="text-xs text-muted-foreground">{p.label}</span>
+              </a>
+            ))}
           </div>
+
+          <a
+            href={`mailto:${email}`}
+            className="mt-3 inline-flex items-center gap-2.5 text-[15px] font-semibold text-primary hover:underline"
+          >
+            <MailIcon className="h-4 w-4 shrink-0" />
+            {email}
+          </a>
         </div>
 
         {/* -------------------------------------------------- form card */}
@@ -141,34 +171,37 @@ export const ContactSection = ({
       {/* ========================================== part 2 · how we work */}
       <div
         className={cn(
-          'flex flex-col justify-center bg-[#0b1d2a] px-5 sm:px-8 lg:px-10 xl:px-14',
+          'flex flex-col justify-center border-l border-primary/10 bg-[linear-gradient(160deg,#e2edf7_0%,#d4e5f3_100%)] px-5 sm:px-8 lg:px-10 xl:px-14',
           fill ? 'py-14 lg:py-10' : 'py-16 sm:py-20',
         )}
       >
         <div className="flex items-center gap-3">
-          <span className="h-px w-8 bg-sky-400" />
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-400">
-            The process
+          <span className="h-px w-8 bg-primary" />
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            How it works
           </p>
         </div>
 
-        <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
-          How we work
+        <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
+          Our Process
         </h2>
+        <p className="mt-4 max-w-xl text-[16px] leading-[1.6] text-muted-foreground">
+          A streamlined, transparent, customer-focused path from first contact to confirmation.
+        </p>
 
-        <ol className="relative mt-10">
+        <ol className="relative mt-9">
           <span
             aria-hidden="true"
-            className="absolute bottom-10 left-[19px] top-3 w-px bg-white/20"
+            className="absolute bottom-10 left-[19px] top-3 w-px bg-primary/20"
           />
           {steps.map((s) => (
             <li key={s.step} className="relative flex gap-5 pb-7 last:pb-0">
-              <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-sky-400 bg-[#0b1d2a] text-xs font-bold text-sky-400">
+              <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-primary bg-background text-xs font-bold text-primary">
                 {s.step}
               </span>
               <div className="pt-1.5">
-                <h3 className="text-base font-semibold text-white">{s.title}</h3>
-                <p className="mt-1 text-sm leading-[1.6] text-white/65">{s.body}</p>
+                <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
+                <p className="mt-1 text-sm leading-[1.6] text-muted-foreground">{s.body}</p>
               </div>
             </li>
           ))}

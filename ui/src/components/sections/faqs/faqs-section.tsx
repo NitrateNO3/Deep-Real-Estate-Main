@@ -14,65 +14,66 @@ export type FaqItem = {
 };
 
 /**
- * The eight questions the live site publishes on its Frequently Asked
- * Questions page, carried over as written.
+ * The eight questions, in the order and wording the reference site publishes
+ * them. Copied verbatim — including its straight apostrophes and its em dash,
+ * so this stays diffable against the source rather than quietly re-typeset.
+ *
+ * These replace the phrasing carried over from the old PHP page, which had
+ * gone through a mangling somewhere ("What are helps does Deep Real provide",
+ * "the district's sub-office. registrar's").
  */
 export const faqItems: FaqItem[] = [
   {
     id: 'item-1',
     question:
-      'I’d like to sell my property. What are the documentation I would need to provide a buyer?',
+      "I'd like to sell my property. What documentation would I need to provide a buyer?",
     answer: [
-      'The original Sale Deed, Title Deed, pertinent tax receipts, and Encumbrance Certificate could be requested by a buyer',
+      'The original Sale Deed, Title Deed, pertinent tax receipts, and Encumbrance Certificate may be requested by purchasers.',
     ],
   },
   {
     id: 'item-2',
-    question: 'Stamp duty is paid by the Buyer or seller?',
+    question: 'Stamp duty is paid by the buyer or seller?',
     answer: ['Only the buyer pays the Stamp Duty.'],
   },
   {
     id: 'item-3',
     question:
-      'Is there a process or form that has to be filled out before the Sale Deed or Transfer Document can be executed?',
+      'Is there a process/form to fill before the Sale Deed or Transfer Document can be executed?',
     answer: [
-      'Yes. But depending on where the property is located, the process and forms may differ from state to state. According to the registration regulations, each state in India has developed its own set of forms. When registering a sale deed or transfer deed, this paperwork must be completed and submitted.',
-      'Both the buyer and the seller are required by the Income Tax Act and its regulations for a sale transaction to supply their PAN card numbers, and in the event of a sale, either the buyer or the seller would need to complete Form 60 of the Income Tax.',
-      'The person would not be required to file Form 60 of the Income Tax if they are a Non-Resident Indian (NRI) who is not assessed for taxes in India.',
+      'Yes — procedures and forms vary by state; each state in India has its own set of forms. Both parties must provide PAN numbers; either party may need Income Tax Form 60. An NRI not assessed for taxes in India may be exempt.',
     ],
   },
   {
     id: 'item-4',
-    question: 'Do legal paperwork for property sales have to be registered?',
-    answer: ['Yes. You can complete it at the district’s sub-office. registrar’s'],
+    question: 'Do legal papers for property sales have to be registered?',
+    answer: ["Yes. You can complete it at the district's sub-registrar's office."],
   },
   {
     id: 'item-5',
     question: 'When does a residential property sale become official?',
     answer: [
-      'If the seller has received the full purchase price, the documents have been registered, and the buyer has been given physical possession of the property, the sale of a residential property is said to have been formalised.',
+      'When the seller has received the full purchase price, the documents have been registered, and the buyer has been given physical possession.',
     ],
   },
   {
     id: 'item-6',
-    question: 'What are helps does Deep Real provide to property brokers?',
+    question: 'What help does Deep Real provide to property brokers?',
     answer: [
-      'On the home page of our website, there is an enquiry form where you can list the properties that are up for sale. You might connect with a large number of buyers by signing up with us as a broker without having to pay any additional fees.',
+      'Brokers can list properties for sale through the inquiry form on the website, connecting with buyers at no additional cost.',
     ],
   },
   {
     id: 'item-7',
-    question: 'How soon after I list my property for sale would I get a call from you?',
+    question: 'How soon after I list my property would I get a call?',
     answer: [
-      'If you had submitted your requirements between 9 am and 10 pm, we would have called you within 15 minutes of receiving your inquiry. If not, we would get in contact with you the following day.',
+      'Within 15 minutes during business hours (9am–10pm), or the next business day otherwise.',
     ],
   },
   {
     id: 'item-8',
-    question: 'How do Deep real help if I want to sell my property?',
-    answer: [
-      'You must complete out an inquiry form, which is available on our website’s front page, in order to sell your property.',
-    ],
+    question: 'How does Deep Real help if I want to sell my property?',
+    answer: ["Complete an inquiry form, available on the website's front page."],
   },
 ];
 

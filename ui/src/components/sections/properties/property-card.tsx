@@ -48,7 +48,7 @@ export const PropertyCard = ({
         className,
       )}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[16/11] overflow-hidden bg-muted">
         <img
           src={image}
           alt={name}
@@ -67,12 +67,12 @@ export const PropertyCard = ({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-[17px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
           {name}
         </h3>
 
-        <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <p className="mt-1 flex items-center gap-1.5 text-[13px] text-muted-foreground">
           <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-primary" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
             <circle cx="12" cy="10" r="3" />
@@ -82,9 +82,9 @@ export const PropertyCard = ({
 
         {/* mt-auto pins everything below to the card bottom, so prices align
             across the row even when one title wraps */}
-        <div className="mt-auto pt-5">
+        <div className="mt-auto pt-4">
           {specs && specs.length > 0 && (
-            <ul className="mb-4 flex items-center gap-4 border-t pt-4 text-xs text-muted-foreground">
+            <ul className="mb-3 flex items-center gap-4 border-t pt-3 text-[11px] text-muted-foreground">
               {specs.slice(0, 3).map((s) => (
                 <li key={s.label} className="min-w-0">
                   <span className="block truncate font-semibold text-foreground">{s.value}</span>
@@ -96,7 +96,7 @@ export const PropertyCard = ({
 
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
-              <span className="block text-xl font-bold tracking-tight text-foreground">
+              <span className="block text-lg font-bold tracking-tight text-foreground">
                 {price}
               </span>
               {priceUnit && (

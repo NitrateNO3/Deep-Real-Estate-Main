@@ -54,7 +54,7 @@ export const ScrollCue = ({ targetId, label = 'Scroll', className }: ScrollCuePr
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="h-4 w-4 animate-bounce motion-reduce:animate-none"
+        className="h-4 w-4 animate-nudge-down motion-reduce:animate-none"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
