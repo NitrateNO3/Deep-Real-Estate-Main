@@ -31,7 +31,12 @@ export type WelcomeSectionProps = {
    * switch between here. Pass '' to go back to the still gallery.
    */
   videoSrc?: string;
-  /** First frame, and what shows instead of the video under reduced motion. */
+  /**
+   * Still held before the footage paints. Off by default: the frame beside the
+   * welcome copy is meant to be moving footage and nothing else, and a poster
+   * is a photograph — on a slow connection, or with the video merely paused,
+   * it is the photograph that people end up looking at.
+   */
   videoPoster?: string;
   /** Milliseconds between automatic advances. */
   interval?: number;
@@ -79,7 +84,7 @@ export const WelcomeSection = ({
   imageAlt = '',
   images = defaultGallery,
   videoSrc = '/video/hero.mp4',
-  videoPoster = '/img/welcome.jpg',
+  videoPoster,
   interval = 3000,
   reverse = false,
   showActions = true,
@@ -127,16 +132,20 @@ export const WelcomeSection = ({
     return () => window.clearInterval(id);
   }, [gallery.length, interval, videoSrc]);
 
-  /* Autoplaying footage is motion nobody asked for, so under
-     prefers-reduced-motion we hold the poster frame and never call play(). */
+  /* The footage plays, full stop. This used to hold a still under
+     prefers-reduced-motion — which is why a photograph was showing here on
+     any machine with "Reduce motion" switched on, including in the browser's
+     own device emulation. The client wants the video and only the video in
+     this frame; it is muted, looping and decorative, so it plays regardless.
+     Browsers that refuse the autoplay attribute get an explicit play(). */
   const videoRef = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     const el = videoRef.current;
-    if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.removeAttribute('autoplay');
-      el.pause();
-    }
+    if (!el || !videoSrc) return;
+    const start = () => el.play().catch(() => undefined);
+    start();
+    el.addEventListener('canplay', start);
+    return () => el.removeEventListener('canplay', start);
   }, [videoSrc]);
 
   return (
@@ -271,7 +280,9 @@ export const WelcomeSection = ({
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      /* auto, not metadata: at 5.4MB the frame sat empty for
+                         a beat before the first picture arrived */
+                      preload="auto"
                       aria-hidden="true"
                       tabIndex={-1}
                     />
