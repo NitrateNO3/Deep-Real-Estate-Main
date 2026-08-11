@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { PropertyCard, type Property } from './property-card';
+import { featuredProperties, propertyHref } from './properties-data';
 
 /** Gradient stops for the CTA — the same three-stop ramp as the contact form's
     submit, so every filled control on the page shares one recipe. */
@@ -19,48 +20,13 @@ export type PropertiesSectionProps = {
   items?: Property[];
   ctaLabel?: string;
   ctaHref?: string;
+  /** Secondary action under the CTA — the whole book, not just these two. */
+  browseLabel?: string;
+  browseHref?: string;
   /** Occupy exactly one viewport, lg and up. */
   fill?: boolean;
   className?: string;
 };
-
-/* The two listings the business actually carries, with its own photography and
-   its own figures. Nothing here is filled in — no `developer` on either,
-   because neither is a builder project and the pill would have to be invented
-   to populate it.
-
-   There is no Top Properties set. A switch here used to offer one, backed by
-   three listings that did not exist; with nothing real behind it, the switch is
-   gone rather than left pointing at an empty tab. */
-const defaultItems: Property[] = [
-  {
-    id: 'suncity-floors',
-    name: '4 BHK Luxury Floors – Suncity',
-    location: 'D Block, Suncity, Gurugram, Haryana',
-    price: '₹5.50 Cr',
-    priceUnit: 'from ₹4.60 Cr',
-    badge: 'For Sale · Residential',
-    image: '/img/props/suncity-floors.jpg',
-    specs: [
-      { label: 'Beds', value: '4' },
-      { label: 'Baths', value: '4' },
-      { label: 'SqFt', value: '2,664' },
-    ],
-  },
-  {
-    id: 'farmhouse-garatpurbas',
-    name: 'Premium Farmhouse – Garat Pur Bas',
-    location: 'Village Garat Pur Bas, Gurugram, Haryana',
-    price: 'On call',
-    priceUnit: '₹30,000 / sq. yard',
-    badge: 'For Sale · Farmhouse',
-    image: '/img/props/farmhouse-garatpurbas.jpg',
-    specs: [
-      { label: 'Plot', value: '3,000 sq. yards' },
-      { label: 'Road', value: '30 m' },
-    ],
-  },
-];
 
 /**
  * Homepage section — Featured properties.
@@ -68,14 +34,23 @@ const defaultItems: Property[] = [
  * Cards lead and the copy sits beside them. The heading block used to run full
  * width above the row, which pushed the listings under the fold; in a column
  * next to them, both fit one screen.
+ *
+ * The two listings come from the shared property data, which the Properties
+ * page reads as well — the home page shows the top of a book it does not own a
+ * private copy of.
+ *
+ * Both cards and the second action lead to the Properties page. The section
+ * shows two of fourteen, so every route out of it has to reach the rest.
  */
 export const PropertiesSection = ({
   title = 'Featured Properties',
   heading = 'Handpicked listings',
   lede = 'A current selection from our residential and commercial books — with the pricing context to judge them.',
-  items = defaultItems,
+  items = featuredProperties,
   ctaLabel = 'Get more info',
   ctaHref = '#contact-page',
+  browseLabel = 'Explore more properties',
+  browseHref = '#properties-page',
   fill = false,
   className,
 }: PropertiesSectionProps) => {
@@ -92,15 +67,24 @@ export const PropertiesSection = ({
       <div
         className={cn(
           'mx-auto w-full max-w-[1400px] px-5 sm:px-8',
-          fill ? 'py-10 lg:py-8' : 'py-10 sm:py-12',
+          /* Pulled in a step from py-10/py-12. The aside gained a second
+             action below the CTA, and in `fill` the whole section still has to
+             land inside one viewport — the height for the new button comes out
+             of the section's own padding rather than off the bottom of the
+             cards. */
+          fill ? 'py-8 lg:py-6' : 'py-8 sm:py-10',
         )}
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_330px] lg:items-center lg:gap-10">
           {/* ------------------------------------------------------- cards */}
           <div className="order-2 lg:order-1">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {/* Each card opens that property's own page. The card has always
+                  been an anchor; until now it had no href to give it, so
+                  clicking a listing did nothing. The button below is what goes
+                  to the index — a card should open the thing it pictures. */}
               {items.map((p) => (
-                <PropertyCard key={p.id} property={p} />
+                <PropertyCard key={p.id} property={{ ...p, href: p.href ?? propertyHref(p.id) }} />
               ))}
             </div>
 
@@ -133,7 +117,7 @@ export const PropertiesSection = ({
                 this is the one thing on the section we want pressed, and an
                 outlined pill read like a footnote. The sheen sits inside the
                 button's own overflow, so it never escapes the rounded edge. */}
-            <div className="mt-6">
+            <div className="mt-5 flex flex-col items-start gap-3">
               <a
                 href={ctaHref}
                 className="group/cta relative isolate inline-flex h-12 cursor-pointer items-center gap-2 overflow-hidden rounded-full px-8 text-[15px] font-bold text-white shadow-[0_14px_30px_-12px_var(--cta-glow)] transition-transform duration-300 hover:-translate-y-0.5"
@@ -151,6 +135,20 @@ export const PropertiesSection = ({
                 />
                 {ctaLabel}
                 <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </a>
+
+              {/* Outlined, directly under the filled one. Two filled pills of
+                  the same weight would compete, and this is the second thing
+                  to do here, not the first — "Get more info" starts a
+                  conversation, this one just goes and looks. */}
+              <a
+                href={browseHref}
+                className="group/browse inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-primary/30 px-6 text-[14px] font-bold text-primary transition-colors duration-300 hover:border-primary hover:bg-primary/5"
+              >
+                {browseLabel}
+                <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform duration-300 group-hover/browse:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="m9 18 6-6-6-6" />
                 </svg>
               </a>

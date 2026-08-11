@@ -13,7 +13,10 @@ export const ContactFullPage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
     {/* activeIndex 4 puts the limelight on Contact Us */}
     <SiteHeader activeIndex={4} />
-    <ContactPage onSubmit={(v) => console.log('contact:', v)} />
+    {/* No onSubmit observer: the form delivers the enquiry itself, and a
+        console.log here would print the visitor's name, phone and email into
+        the browser console on the live site. */}
+    <ContactPage />
     <SiteFooter />
   </div>
 );

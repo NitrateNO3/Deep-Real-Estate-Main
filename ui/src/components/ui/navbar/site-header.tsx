@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { LiquidMetalButton } from '@/components/ui/liquid-metal-button';
+import { ContactPopup } from '@/components/ui/contact-popup/contact-popup';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ types */
@@ -29,7 +30,6 @@ export type SiteHeaderProps = {
   brand?: React.ReactNode;
   phone?: string;
   ctaLabel?: string;
-  ctaHref?: string;
   /** Index of the item to mark as the current page. */
   activeIndex?: number;
   showThemeToggle?: boolean;
@@ -38,18 +38,25 @@ export type SiteHeaderProps = {
 
 /* --------------------------------------------------------------- defaults */
 
+/* Properties takes the third slot — the thing the business sells belongs in
+   the bar itself, and FAQs moves under More, which is where a reference page
+   of that kind sits on every other site of this shape.
+
+   Order matters beyond appearance: `activeIndex` is a position in this array,
+   so each page's demo passes the index of the item that leads to it. Properties
+   is 2, and FAQs is now reached through More at 5. */
 const defaultItems: SiteNavItem[] = [
   { label: 'Home', href: '#home-so-far' },
   { label: 'About Us', href: '#about-page' },
-  { label: 'FAQs', href: '#faqs-page' },
+  { label: 'Properties', href: '#properties-page' },
   { label: 'Maps', href: '#maps-page' },
   { label: 'Contact Us', href: '#contact-page' },
   {
     label: 'More',
     href: '#',
     children: [
+      { label: 'FAQs', href: '#faqs-page', description: 'The questions we get asked most' },
       { label: 'Documents', href: '#documents-page', description: 'Forms, approvals & downloads' },
-      // pages not built yet — the labels are in place, the links are not
       { label: 'Privacy Policy', href: '#privacy-page', description: 'How we handle your details' },
       { label: 'Terms and Conditions', href: '#terms-page', description: 'The terms of using this site' },
     ],
@@ -58,10 +65,12 @@ const defaultItems: SiteNavItem[] = [
 
 /* The real mark from the live site. The bar is navy in both themes now, so the
    white wordmark is the correct variant throughout — the dark-on-light version
-   would disappear against it. */
+   would disappear against it. Taller than it was: this mark carries the
+   "LIGHTING DREAMS" line under the rule, so at the old height the wordmark
+   itself came out smaller than it used to be. */
 const DefaultBrand = () => (
   <a href="#home-so-far" className="flex shrink-0 items-center" aria-label="Deep Real Estate — home">
-    <img src="/img/logo/deep-logo-light.png" alt="Deep Real Estate" className="h-9 w-auto" />
+    <img src="/img/logo/deep-logo-light.png" alt="Deep Real Estate" className="h-11 w-auto" />
   </a>
 );
 
@@ -120,9 +129,11 @@ const ChevronDown = ({ className }: { className?: string }) => (
 export const SiteHeader = ({
   items = defaultItems,
   brand,
-  phone = '0124-4356789',
-  ctaLabel = 'Sell Your Property',
-  ctaHref = '#',
+  phone = '+91-124-4080100',
+  /* Was "Sell Your Property", which spoke to half the people who arrive here.
+     It no longer navigates — it opens the numbers, because both buying and
+     selling start with a phone call. */
+  ctaLabel = 'Buy/Sell Property',
   activeIndex = 0,
   // the site ships light-only; the toggle stays available as a prop for the
   // sandbox, but no page offers it
@@ -132,6 +143,7 @@ export const SiteHeader = ({
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [isReady, setIsReady] = useState(false);
 
@@ -346,10 +358,12 @@ export const SiteHeader = ({
           {showThemeToggle && <ThemeToggle />}
 
           <span className="hidden shrink-0 sm:inline-block">
+            {/* onClick, not href — the button opens the numbers rather than
+                going anywhere, so the ctaHref prop is gone with it. */}
             <LiquidMetalButton
-              href={ctaHref}
+              onClick={() => setContactOpen(true)}
               label={ctaLabel}
-              width={168}
+              width={178}
               height={42}
               fontSize={13}
             />
@@ -449,17 +463,24 @@ export const SiteHeader = ({
                 {phone}
               </a>
             )}
-            <a
-              href={ctaHref}
-              className="block rounded-full bg-primary px-5 py-3 text-center text-sm font-semibold text-primary-foreground"
+            {/* the drawer's copy of the CTA opens the same dialog */}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false);
+                setContactOpen(true);
+              }}
+              className="block w-full cursor-pointer rounded-full bg-primary px-5 py-3 text-center text-sm font-semibold text-primary-foreground"
             >
               {ctaLabel}
-            </a>
+            </button>
           </div>
         </div>
         </div>,
         document.body,
       )}
+
+      <ContactPopup open={contactOpen} onClose={() => setContactOpen(false)} />
     </header>
   );
 };

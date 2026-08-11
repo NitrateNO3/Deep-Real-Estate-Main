@@ -1,7 +1,18 @@
+import { useState } from 'react';
 import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { ContactPopup } from '@/components/ui/contact-popup/contact-popup';
 import { cn } from '@/lib/utils';
 
-export type FooterLink = { label: string; href: string };
+export type FooterLink = {
+  label: string;
+  href?: string;
+  /**
+   * Opens the numbers dialog instead of navigating. Buying or selling starts
+   * with a phone call, so that row is a control, not a destination — and it is
+   * rendered as a <button> rather than an anchor with a dead href.
+   */
+  dialog?: boolean;
+};
 
 export type SiteFooterProps = {
   address?: string;
@@ -59,12 +70,15 @@ const defaultExplore: FooterLink[] = [
   { label: 'Contact Us', href: '#contact-page' },
 ];
 
+/* Was Residential / Commercial / Plots / Developers / Sell Your Property, all
+   of them href="#" — five rows that looked like navigation and went nowhere.
+   These five all lead somewhere real. */
 const defaultServices: FooterLink[] = [
-  { label: 'Residential', href: '#' },
-  { label: 'Commercial', href: '#' },
-  { label: 'Plots', href: '#' },
-  { label: 'Developers', href: '#' },
-  { label: 'Sell Your Property', href: '#' },
+  { label: 'Properties', href: '#properties-page' },
+  { label: 'FAQs', href: '#faqs-page' },
+  { label: 'Privacy Policy', href: '#privacy-page' },
+  { label: 'Terms and Conditions', href: '#terms-page' },
+  { label: 'Buy/Sell Property', dialog: true },
 ];
 
 /**
@@ -76,7 +90,9 @@ const defaultServices: FooterLink[] = [
  * it follows without needing a heavy border.
  */
 export const SiteFooter = ({
-  address = 'G-564, Sushant Lok-II Extn. Sector 57, Nr. Scottish High Gurgaon, Haryana-122002, India',
+  /* Comma after "Extn." to match the address as it is set in the Privacy
+     Policy and Terms — one address, one spelling. */
+  address = 'G-564, Sushant Lok-II Extn., Sector 57, Nr. Scottish High Gurgaon, Haryana-122002, India',
   phone = '+91-9810922338',
   email = 'info@deeprealestate.in',
   facebookHref,
@@ -86,6 +102,7 @@ export const SiteFooter = ({
   copyright = '© Copyright 2005-2025 Deep Real Estate . All Rights Reserved | Managed By Asterisk Serve',
   className,
 }: SiteFooterProps) => {
+  const [contactOpen, setContactOpen] = useState(false);
   const linkCls =
     'text-sm text-white/70 transition-all duration-200 hover:text-sky-300 hover:pl-1';
 
@@ -116,7 +133,7 @@ export const SiteFooter = ({
               <img
                 src="/img/logo/deep-logo-light.png"
                 alt="Deep Real Estate"
-                className="h-11 w-auto"
+                className="h-14 w-auto"
               />
             </a>
             <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-sky-300/70">
@@ -189,16 +206,29 @@ export const SiteFooter = ({
           </div>
 
           {/* services */}
+          {/* Headed "More", not "Properties" — Properties is now one of the
+              rows in it, and a column cannot be named after its own first
+              item. Same label as the navbar's menu, which holds the same set. */}
           <div className="lg:col-span-2">
             <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">
-              Properties
+              More
             </h2>
             <ul className="mt-6 space-y-3">
               {services.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className={linkCls}>
-                    {l.label}
-                  </a>
+                  {l.dialog ? (
+                    <button
+                      type="button"
+                      onClick={() => setContactOpen(true)}
+                      className={cn(linkCls, 'cursor-pointer text-left')}
+                    >
+                      {l.label}
+                    </button>
+                  ) : (
+                    <a href={l.href} className={linkCls}>
+                      {l.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -216,6 +246,8 @@ export const SiteFooter = ({
           </a>
         </div>
       </div>
+
+      <ContactPopup open={contactOpen} onClose={() => setContactOpen(false)} />
     </footer>
   );
 };

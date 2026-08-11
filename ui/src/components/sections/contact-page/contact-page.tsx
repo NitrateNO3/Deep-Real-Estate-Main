@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ContactPopup } from '@/components/ui/contact-popup/contact-popup';
 import { ContactForm, type ContactValues } from '@/components/sections/contact/contact-form';
 import { cn } from '@/lib/utils';
 
@@ -11,8 +13,9 @@ export type ContactPageProps = {
   className?: string;
 };
 
+/* Comma after "Extn." — the same spelling the footer and the legal pages use. */
 const DEFAULT_ADDRESS =
-  'G-564, Sushant Lok-II Extn. Sector 57, Nr. Scottish High Gurgaon, Haryana-122002, India';
+  'G-564, Sushant Lok-II Extn., Sector 57, Nr. Scottish High Gurgaon, Haryana-122002, India';
 
 const PinIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,6 +64,7 @@ export const ContactPage = ({
   onSubmit,
   className,
 }: ContactPageProps) => {
+  const [contactOpen, setContactOpen] = useState(false);
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   return (
@@ -197,6 +201,42 @@ export const ContactPage = ({
                     </div>
                   </li>
                 </ul>
+
+                {/* Filling in seven fields is not everyone's idea of getting
+                    in touch. This opens the same numbers dialog the header's
+                    Buy/Sell Property button opens, so the alternative to the
+                    form is one click away from it rather than buried. */}
+                <div className="mt-6 border-t pt-5">
+                  <button
+                    type="button"
+                    onClick={() => setContactOpen(true)}
+                    className="group/call flex w-full cursor-pointer items-center gap-3 rounded-xl border-2 border-primary/25 bg-primary/[0.04] px-4 py-3.5 text-left transition-colors hover:border-primary hover:bg-primary/[0.08]"
+                  >
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[linear-gradient(120deg,#0b9ae0_0%,#0080c6_50%,#00618f_100%)] text-white">
+                      <PhoneIcon className="h-[18px] w-[18px]" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15px] font-bold text-foreground">
+                        Prefer a call?
+                      </span>
+                      <span className="mt-0.5 block text-[13px] text-muted-foreground">
+                        See every number and WhatsApp us directly
+                      </span>
+                    </span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 text-primary transition-transform duration-300 group-hover/call:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -207,6 +247,8 @@ export const ContactPage = ({
           </div>
         </div>
       </section>
+
+      <ContactPopup open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 };

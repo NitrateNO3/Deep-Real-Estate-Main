@@ -16,6 +16,9 @@ import * as AboutDemos from '@/components/sections/about/about-page.demo';
 import * as MapsPageDemos from '@/components/sections/maps-page/maps-page.demo';
 import * as ContactPageDemos from '@/components/sections/contact-page/contact-page.demo';
 import * as DocumentsPageDemos from '@/components/sections/documents-page/documents-page.demo';
+import * as PropertiesPageDemos from '@/components/sections/properties-page/properties-page.demo';
+import { allProperties, propertyPageId } from '@/components/sections/properties/properties-data';
+import * as HowItWorksDemos from '@/components/ui/how-it-works/how-it-works.demo';
 import * as FaqsDemos from '@/components/sections/faqs/faqs-section.demo';
 import * as ReviewsDemos from '@/components/sections/reviews/reviews-section.demo';
 import * as PrivacyDemos from '@/components/sections/privacy-page/privacy-page.demo';
@@ -122,13 +125,6 @@ export const registry: PreviewEntry[] = [
     render: () => <MapsPageDemos.MapsFullPage />,
   },
   {
-    id: 'maps-page-old',
-    group: 'Maps page',
-    name: '(prev) Maps — sectioned bands',
-    layout: 'full',
-    render: () => <MapsPageDemos.MapsSectionedPage />,
-  },
-  {
     id: 'contact-page',
     group: 'Contact page',
     name: '★ Contact Us — full page',
@@ -155,6 +151,45 @@ export const registry: PreviewEntry[] = [
     name: '★ Documents — full page',
     layout: 'full',
     render: () => <DocumentsPageDemos.DocumentsFullPage />,
+  },
+  {
+    id: 'properties-page',
+    group: 'Properties page',
+    name: '★ Properties — full page',
+    layout: 'full',
+    render: () => <PropertiesPageDemos.PropertiesFullPage />,
+  },
+  {
+    id: 'properties-page-solo',
+    group: 'Properties page',
+    name: '1 · Properties index — standalone',
+    layout: 'full',
+    render: () => <PropertiesPageDemos.Standalone />,
+  },
+  /* One entry per listing, built from the data rather than typed out. The app
+     routes on the URL hash and looks the id up here, so this is what makes
+     #property-suncity-floors a real page. Add a property to the data and its
+     page appears with it. */
+  ...allProperties.map((p) => ({
+    id: propertyPageId(p.id),
+    group: 'Properties page',
+    name: `· ${p.name}`,
+    layout: 'full' as const,
+    render: PropertiesPageDemos.propertyPage(p),
+  })),
+  {
+    id: 'how-it-works',
+    group: 'Components',
+    name: 'How it works — scattered',
+    layout: 'full',
+    render: () => <HowItWorksDemos.OurProcess />,
+  },
+  {
+    id: 'how-it-works-default',
+    group: 'Components',
+    name: 'How it works — as supplied',
+    layout: 'full',
+    render: () => <HowItWorksDemos.Default />,
   },
   {
     id: 'faqs-page',

@@ -1,10 +1,13 @@
 import { ContactForm, type ContactValues } from './contact-form';
+import { HowItWorksCompact } from '@/components/ui/how-it-works/how-it-works';
 import { cn } from '@/lib/utils';
 
 export type FlowStep = {
   step: string;
   title: string;
   body: string;
+  /** Which of the card's three palettes this step is drawn in. */
+  colorTheme?: 'orange' | 'blue' | 'purple';
 };
 
 export type { ContactValues };
@@ -35,21 +38,25 @@ const defaultSteps: FlowStep[] = [
     step: '01',
     title: 'Reach Us',
     body: 'Call or send an inquiry — we respond within 15 minutes during business hours.',
+    colorTheme: 'blue',
   },
   {
     step: '02',
     title: 'Choose Location',
     body: 'Pick your preferred sector or locality across the Gurgaon market.',
+    colorTheme: 'orange',
   },
   {
     step: '03',
     title: 'Choose Property',
     body: 'Shortlist from properties matched to your budget and requirements.',
+    colorTheme: 'purple',
   },
   {
     step: '04',
     title: 'Confirmation',
     body: 'Close the deal with transparent documentation and full support.',
+    colorTheme: 'blue',
   },
 ];
 
@@ -175,37 +182,32 @@ export const ContactSection = ({
           fill ? 'py-14 lg:py-10' : 'py-16 sm:py-20',
         )}
       >
-        <div className="flex items-center gap-3">
-          <span className="h-px w-8 bg-primary" />
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            How it works
-          </p>
-        </div>
-
-        <h2 className="mt-4 text-4xl font-bold leading-[1.03] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
+        {/* The "How it works" eyebrow is gone — the heading under it already
+            said the same thing twice over. Its absence is what the extra top
+            margin replaces: without it the title started hard against the top
+            of the column. */}
+        <h2 className="mt-6 text-4xl font-bold leading-[1.03] tracking-tight text-foreground sm:mt-12 sm:text-5xl lg:text-[3.5rem]">
           Our Process
         </h2>
-        <p className="mt-4 max-w-xl text-[16px] leading-[1.6] text-muted-foreground">
+        {/* Indented rather than right-aligned — the line is set ragged-right,
+            and flipping it would leave the ragged edge on the side the eye
+            starts from. */}
+        <p className="mt-4 max-w-xl text-[16px] leading-[1.6] text-muted-foreground sm:ml-20">
           A streamlined, transparent, customer-focused path from first contact to confirmation.
         </p>
 
-        <ol className="relative mt-9">
-          <span
-            aria-hidden="true"
-            className="absolute bottom-10 left-[19px] top-3 w-px bg-primary/20"
-          />
-          {steps.map((s) => (
-            <li key={s.step} className="relative flex gap-5 pb-7 last:pb-0">
-              <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-primary bg-background text-xs font-bold text-primary">
-                {s.step}
-              </span>
-              <div className="pt-1.5">
-                <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-1 text-sm leading-[1.6] text-muted-foreground">{s.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        {/* The pinned cards in a zig-zag, with the travelling dashed line
+            running between them — the same cards and the same animation as the
+            HowItWorks component, at the compact size, so this column can carry
+            the arrangement without the 900px band the full layout needs. */}
+        <HowItWorksCompact
+          className="mt-8"
+          features={steps.map((s) => ({
+            title: s.title,
+            description: s.body,
+            colorTheme: s.colorTheme,
+          }))}
+        />
       </div>
     </section>
   );

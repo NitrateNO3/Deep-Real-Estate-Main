@@ -2,7 +2,11 @@ import { SiteHeader } from '@/components/ui/navbar/site-header';
 import { ScrollCue } from '@/components/ui/scroll-cue/scroll-cue';
 import { SiteFooter } from '@/components/sections/footer/site-footer';
 import { StatsBand } from '@/components/sections/stats/stats-band';
+import { Breadcrumb } from '@/components/ui/breadcrumb/breadcrumb';
 import { AboutIntro } from './about-intro';
+import { AboutWhy } from './about-why';
+import { AboutServices } from './about-services';
+import { AboutFounder } from './about-founder';
 import { AboutMission } from './about-mission';
 
 /** Section 1 on its own. */
@@ -23,10 +27,14 @@ export const Mission = () => (
 
 /**
  * The About Us page.
- *   nav (limelight on About Us) → intro → mission & vision → footer
+ *   nav → breadcrumb → intro → why us → services → founder → mission → footer
  *
  * Scrolls normally, same as every other page — screens are still sized to the
  * viewport, but nothing snaps the scroll to their boundaries.
+ *
+ * The order is the firm's own argument, in the order it makes it: who we are,
+ * why us, what we do, who is behind it — and only then the mission and the
+ * developer network, which are context rather than claims.
  */
 export const AboutPage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
@@ -36,6 +44,7 @@ export const AboutPage = () => (
       <div className="shrink-0">
         {/* activeIndex 1 puts the limelight on About Us */}
         <SiteHeader activeIndex={1} />
+        <Breadcrumb items={[{ label: 'About Us' }]} />
       </div>
       <div className="lg:min-h-0 lg:flex-1">
         <AboutIntro fill />
@@ -53,10 +62,23 @@ export const AboutPage = () => (
       </div>
     </section>
 
-    {/* Sized to its content, not to a viewport. Forcing min-h-dvh here was what
-        created the gap — the copy simply does not fill a full screen. */}
+    {/* Everything below screen one is sized to its content, not to a viewport.
+        Forcing min-h-dvh on these was what created the empty bands — the copy
+        simply does not fill a full screen. */}
     <section id="about-mission" className="scroll-mt-20">
-      <AboutMission />
+      <AboutWhy />
+    </section>
+    <section>
+      <AboutServices />
+    </section>
+    <section>
+      <AboutFounder />
+    </section>
+    <section>
+      {/* beliefs off: "Why Deep Real Estate?" above already answers this, in
+          the firm's own words rather than in four generic claims. What is left
+          here is the mission, the developer network and the closing ask. */}
+      <AboutMission beliefs={[]} />
     </section>
     <section>
       <SiteFooter />

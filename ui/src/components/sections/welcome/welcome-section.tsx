@@ -66,10 +66,13 @@ export type WelcomeSectionProps = {
  *    line up exactly with the top and bottom of the text block.
  */
 export const WelcomeSection = ({
-  eyebrow = 'Gurugram · Manesar · Dharuhera · Sohna',
+  /* The firm's own strapline, in place of the list of towns. The towns are
+     still on the page — the maps section names them — and a strapline earns
+     the position above the headline more than a geography does. */
+  eyebrow = 'Local Expertise · Trusted Guidance · Better Real Estate Decisions',
   // Deliberate break: "Welcome to" is the greeting, the name is the statement.
   heading = 'Welcome to\nDeep Realestate',
-  lead = 'Your search for the best suitable property as per your budget and desired location ends here. We have best Industry\'s top talent with technology to make the search and sell experience intelligent and seamless.',
+  lead = 'With over two decades of experience in Gurgaon’s real estate market, Deep Real Estate is built on trust, transparency, and long-term relationships. Founded by Pawan Yadav, we help clients buy, sell, and invest in premium residential and commercial properties across Gurgaon.',
   trustTitle = 'Licensed & transparent',
   trustNote = 'Serving Gurgaon since 2005',
   imageSrc,

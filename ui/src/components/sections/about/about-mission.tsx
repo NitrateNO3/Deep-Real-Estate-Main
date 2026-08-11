@@ -3,10 +3,15 @@ import { cn } from '@/lib/utils';
 
 export type PartnerLogo = { name: string; src: string };
 
+/** One of the statements the heading promises. */
+export type Pillar = { label: string; body: string };
+
 export type AboutMissionProps = {
   eyebrow?: string;
   heading?: string;
   lede?: string;
+  /** Mission, vision and the promise under both. */
+  pillars?: Pillar[];
   beliefsIntro?: string;
   beliefs?: string[];
   /** Panel beside the copy. */
@@ -23,6 +28,25 @@ export type AboutMissionProps = {
   fill?: boolean;
   className?: string;
 };
+
+/* The heading says "Mission and vision"; for a long time only the mission was
+   actually here, which is what left this column short beside the logo wall.
+   Both are now stated, plus the promise that sits under them — the free
+   paperwork support the firm offers whether or not you buy through it. */
+const defaultPillars: Pillar[] = [
+  {
+    label: 'Our mission',
+    body: 'To help our clients make wise and profitable property decisions in Gurgaon — guiding every buyer and seller toward outcomes that genuinely serve their goals.',
+  },
+  {
+    label: 'Our vision',
+    body: 'To stay the firm Gurgaon families and investors call first, and to be judged as much by the deals we advised against as by the ones we closed.',
+  },
+  {
+    label: 'Our promise',
+    body: 'Straight answers, the same price to everyone, and free help with paperwork, registry and dues — whether or not the property came through us.',
+  },
+];
 
 /* The reference site's four, as it words them. */
 const defaultBeliefs = [
@@ -65,7 +89,8 @@ const defaultPartners: PartnerLogo[] = [
 export const AboutMission = ({
   eyebrow = 'What drives us',
   heading = 'Mission and vision',
-  lede = 'To help our clients make wise and profitable property decisions in Gurgaon — guiding every buyer and seller toward outcomes that genuinely serve their goals.',
+  lede = 'Twenty years in one market, and the same two statements behind every deal we have handled in it.',
+  pillars = defaultPillars,
   beliefsIntro = 'We believe in:',
   beliefs = defaultBeliefs,
   partnersEyebrow = 'Partner developers',
@@ -109,6 +134,37 @@ export const AboutMission = ({
 
             <p className="mt-6 text-[17px] leading-[1.7] text-foreground/85">{lede}</p>
 
+            {/* Mission, vision, promise. Stacked plates rather than three more
+                cards in a grid: read top to bottom they are one argument, and
+                stacked they also carry this column down to the height of the
+                logo wall opposite, which is what left it looking empty. */}
+            <ul className="mt-7 space-y-3">
+              {pillars.map((p) => (
+                <li
+                  key={p.label}
+                  className="group/pillar relative overflow-hidden rounded-2xl border bg-card p-5 shadow-[0_10px_28px_-22px_rgb(0_0_0/0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:shadow-[0_18px_38px_-22px_rgb(0_128_198/0.5)] sm:p-6"
+                >
+                  {/* a brand rule down the left edge that fills in on hover —
+                      the plate is doing the work, so the marker stays a hairline */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-primary/25 transition-colors duration-300 group-hover/pillar:bg-primary"
+                  />
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+                    {p.label}
+                  </p>
+                  <p className="mt-2 text-[15.5px] leading-[1.65] text-foreground/85">{p.body}</p>
+                </li>
+              ))}
+            </ul>
+
+            {/* The four generic claims that used to live here — "Solid
+                fundamentals", "Profitable results" — are gone: the About page
+                now states why to choose this firm in its own section, in the
+                firm's own words, and saying it twice weakened both. Guarded
+                rather than deleted so the block returns if beliefs are set. */}
+            {beliefs.length > 0 && (
+              <>
             <p className="mt-7 text-[15px] font-semibold text-foreground">{beliefsIntro}</p>
 
             {/* Four cards rather than four bullets. A bulleted list reads as
@@ -140,6 +196,8 @@ export const AboutMission = ({
                 </li>
               ))}
             </ul>
+              </>
+            )}
           </div>
 
           {/* partner developers */}

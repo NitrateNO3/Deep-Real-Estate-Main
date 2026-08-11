@@ -10,14 +10,13 @@ export type AboutIntroProps = {
   className?: string;
 };
 
-/* Carried over from the reference site's About page, verbatim — including its
-   straight apostrophes, so this stays diffable against the source. It replaces
-   the old PHP page's copy, which said the same things at three times the
-   length. */
+/* The firm's own About Us copy, as supplied. It replaces the reference site's
+   text, which claimed "the industry's top talent with technology" twice in
+   three paragraphs and never once named the person who founded the place. */
 const defaultParagraphs = [
-  "Your search for the best suitable property as per your budget and desired location ends here. We have best Industry's top talent with technology to make the search and sell experience intelligent and seamless.",
-  'Deep Real Estate is a fully-licensed Haryana real-estate agency helping clients buy and sell property in the Gurgaon market through a streamlined, transparent, customer-focused process.',
-  "We combine the industry's top talent with technology to make the search and sell experience intelligent and seamless — across Gurugram, Manesar, Dharuhera and Sohna.",
+  'Since 2005, Deep Real Estate has been serving clients across Gurgaon with a commitment to honest advice, market knowledge, and personalised service.',
+  'Founded by Pawan Yadav, our firm has grown through strong client relationships and an in-depth understanding of Gurgaon’s evolving real estate landscape.',
+  'From finding the right property to negotiating the right deal, we provide end-to-end assistance with professionalism and transparency.',
 ];
 
 /**
@@ -27,8 +26,8 @@ const defaultParagraphs = [
  * rather than a 12-column span, whose real width shifts with the gap.
  */
 export const AboutIntro = ({
-  eyebrow = 'Established 2005',
-  heading = 'A licensed Haryana agency built on trust',
+  eyebrow = 'About Us',
+  heading = 'Experience You Can Trust.',
   paragraphs = defaultParagraphs,
   imageSrc = '/img/about/intro.jpg',
   imageAlt = 'Interior of a Gurgaon residence',

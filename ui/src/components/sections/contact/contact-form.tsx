@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LiquidMetalButton } from '@/components/ui/liquid-metal-button';
 import { GlassCard } from '@/components/ui/glass-card/glass-card';
 import { cn } from '@/lib/utils';
@@ -104,6 +104,20 @@ const SelectField = ({
 
 export type ContactFormProps = {
   onSubmit?: (values: ContactValues) => void;
+  /**
+   * POST the enquiry here as JSON. When set, this is how the lead is
+   * delivered — point it at a form service (Formspree, Web3Forms) or at the
+   * site's own handler.
+   *
+   * When it is NOT set, the form hands the enquiry to WhatsApp instead, on
+   * `whatsapp` below. That fallback exists because the alternative was what
+   * this form used to do: collect seven fields, hand them to a console.log
+   * and tell the visitor nothing. A lead that reaches the office by WhatsApp
+   * is a lead; a lead that reaches a browser console is not.
+   */
+  endpoint?: string;
+  /** Office WhatsApp number for the fallback. Digits and + only. */
+  whatsapp?: string;
   /** Fewer message rows, for viewport-height layouts. */
   compact?: boolean;
   /**
@@ -123,18 +137,38 @@ export type ContactFormProps = {
  * emailid, subject, message — so wiring it to the existing endpoint is a
  * one-to-one mapping rather than a re-spec.
  */
+/** The enquiry as a WhatsApp message, for the no-endpoint fallback. */
+const composeMessage = (v: ContactValues) =>
+  [
+    'New enquiry from deeprealestate.in',
+    '',
+    `Name: ${v.fullname}`,
+    `Mobile: ${v.mobileno}`,
+    v.emailid && `Email: ${v.emailid}`,
+    v.subject && `Subject: ${v.subject}`,
+    v.propertytype && `Property type: ${v.propertytype}`,
+    v.location && `Location: ${v.location}`,
+    v.message && `\n${v.message}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
 export const ContactForm = ({
   onSubmit,
+  endpoint,
+  whatsapp = '+91-9810922338',
   compact = false,
   variant = 'card',
   className,
 }: ContactFormProps) => {
   const glass = variant === 'glass';
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    onSubmit?.({
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const values: ContactValues = {
       fullname: String(fd.get('fullname') ?? ''),
       mobileno: String(fd.get('mobileno') ?? ''),
       emailid: String(fd.get('emailid') ?? ''),
@@ -142,7 +176,35 @@ export const ContactForm = ({
       propertytype: String(fd.get('propertytype') ?? ''),
       location: String(fd.get('location') ?? ''),
       message: String(fd.get('message') ?? ''),
-    });
+    };
+
+    onSubmit?.(values);
+
+    if (endpoint) {
+      setStatus('sending');
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(values),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        setStatus('sent');
+      } catch {
+        setStatus('error');
+      }
+      return;
+    }
+
+    /* No endpoint configured: hand it to WhatsApp. Opened in a new tab so the
+       page and its confirmation survive if the visitor comes straight back. */
+    const wa = `https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
+      composeMessage(values),
+    )}`;
+    window.open(wa, '_blank', 'noopener,noreferrer');
+    form.reset();
+    setStatus('sent');
   };
 
   /* Filled fields with a real border read as "type here"; hairline outlines
@@ -289,11 +351,58 @@ export const ContactForm = ({
         <div className="sm:col-span-2">
           <LiquidMetalButton
             type="submit"
-            label="Send message"
+            label={status === 'sending' ? 'Sending…' : 'Send message'}
             width="100%"
             height={compact ? 48 : 56}
             fontSize={compact ? 14 : 15}
           />
+
+          {/* The form used to say nothing at all on submit — no confirmation,
+              no error, fields left full. aria-live so it is announced rather
+              than only seen. */}
+          <div aria-live="polite">
+            {status === 'sent' && (
+              <p
+                className={cn(
+                  'mt-3 flex items-start gap-2.5 rounded-xl border px-4 py-3 text-[14px] leading-snug',
+                  glass
+                    ? 'border-emerald-300/40 bg-emerald-400/15 text-white'
+                    : 'border-emerald-200 bg-emerald-50 text-emerald-900',
+                )}
+              >
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m5 13 4 4L19 7" />
+                </svg>
+                <span>
+                  Thank you — your enquiry is on its way. We reply within about 15 minutes
+                  between 9am and 10pm.
+                </span>
+              </p>
+            )}
+
+            {status === 'error' && (
+              <p
+                className={cn(
+                  'mt-3 flex items-start gap-2.5 rounded-xl border px-4 py-3 text-[14px] leading-snug',
+                  glass
+                    ? 'border-red-300/40 bg-red-400/15 text-white'
+                    : 'border-red-200 bg-red-50 text-red-900',
+                )}
+              >
+                <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 8v5M12 17h.01" />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
+                <span>
+                  That did not go through. Please call{' '}
+                  <a href={`tel:${whatsapp.replace(/[^+\d]/g, '')}`} className="font-bold underline">
+                    {whatsapp}
+                  </a>{' '}
+                  and we will take the details over the phone.
+                </span>
+              </p>
+            )}
+          </div>
         </div>
       </form>
     </Shell>

@@ -52,7 +52,7 @@ export const HomeSoFar = () => (
     </section>
 
     <section className="lg:min-h-dvh">
-      <ContactSection fill onSubmit={(v) => console.log('contact:', v)} />
+      <ContactSection fill />
     </section>
   </div>
 );

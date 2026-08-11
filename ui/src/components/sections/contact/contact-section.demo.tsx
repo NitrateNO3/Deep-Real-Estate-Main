@@ -9,7 +9,7 @@ import { ContactSection } from './contact-section';
 /** The section on its own. */
 export const Standalone = () => (
   <div className="min-h-dvh bg-background">
-    <ContactSection onSubmit={(v) => console.log('contact:', v)} />
+    <ContactSection />
   </div>
 );
 
@@ -46,7 +46,7 @@ export const HomeSoFar = () => (
     </section>
 
     <section className="lg:min-h-dvh">
-      <ContactSection fill onSubmit={(v) => console.log('contact:', v)} />
+      <ContactSection fill />
     </section>
   </div>
 );

@@ -12,6 +12,8 @@ import { DocumentsPage } from './documents-page';
 export const DocumentsFullPage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
     <SiteHeader activeIndex={5} />
+    {/* no Breadcrumb bar here — this page carries its trail inside its own
+        title band, so a strip above it would be a second one */}
     <DocumentsPage />
     <SiteFooter />
   </div>

@@ -1,5 +1,4 @@
 import { SiteHeader } from '@/components/ui/navbar/site-header';
-import { SearchBand } from '@/components/sections/search/search-band';
 import { WelcomeSection } from '@/components/sections/welcome/welcome-section';
 import { BrandsSection } from '@/components/sections/brands/brands-section';
 import { MapsSection } from '@/components/sections/maps/maps-section';
@@ -22,7 +21,7 @@ export const Standalone = () => (
 
 /**
  * The full home page — seven screens.
- *   1 · header + search + welcome
+ *   1 · header + welcome
  *   2 · ask about property
  *   3 · maps + stats strip
  *   4 · featured & top properties
@@ -32,10 +31,15 @@ export const Standalone = () => (
  */
 export const HomePage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
+    {/* No search strip. It read "Search by sector, project or developer" over
+        a placeholder suggesting "Sector 56, DLF Phase 3, M3M…" — a catalogue
+        of a hundred listings. There are two, so every one of those queries
+        found nothing and dropped the visitor on an index of two cards. The
+        first screen promises what the second screen has to deliver, and the
+        welcome section now takes the height back. */}
     <section className="flex flex-col lg:h-dvh">
       <div className="shrink-0">
         <SiteHeader activeIndex={0} />
-        <SearchBand onSearch={(q) => console.log('search:', q)} />
       </div>
       <div className="lg:min-h-0 lg:flex-1">
         <WelcomeSection fill />
@@ -86,7 +90,8 @@ export const HomePage = () => (
     </section>
 
     <section className="lg:min-h-dvh">
-      <ContactSection fill onSubmit={(v) => console.log('contact:', v)} />
+      {/* see contact-page.demo — no PII into the console */}
+      <ContactSection fill />
     </section>
 
     {/* sized to its content — the footer is shorter than a viewport */}
