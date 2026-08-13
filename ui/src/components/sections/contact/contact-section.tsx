@@ -29,7 +29,7 @@ export type ContactSectionProps = {
 
 const defaultPhones: PhoneLine[] = [
   { number: '+91-9810922338', label: 'Mobile' },
-  { number: '+91-124-4080100', label: 'Landline' },
+  { number: '0124-4080100', label: 'Landline' },
   { number: '+91-9599639738', label: 'Free Support' },
 ];
 

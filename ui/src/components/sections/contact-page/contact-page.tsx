@@ -57,7 +57,7 @@ const MAP_IMAGE = '/img/maps/head-office.webp';
  */
 export const ContactPage = ({
   address = DEFAULT_ADDRESS,
-  phones = ['+91-124-4080100', '9810922338'],
+  phones = ['0124-4080100', '9810922338'],
   emails = ['info@deeprealestate.in'],
   heading = 'Contact us',
   lede = 'We are happy to answer questions about a sector, a project or a price. Call the office, write to us, or leave your details below and we will come back to you.',
