@@ -76,7 +76,7 @@ export const WelcomeSection = ({
      the position above the headline more than a geography does. */
   eyebrow = 'Local Expertise · Trusted Guidance · Better Real Estate Decisions',
   // Deliberate break: "Welcome to" is the greeting, the name is the statement.
-  heading = 'Welcome to\nDeep Realestate',
+  heading = 'Welcome to\nDeep Real Estate',
   lead = 'With over two decades of experience in Gurgaon’s real estate market, Deep Real Estate is built on trust, transparency, and long-term relationships. Founded by Pawan Yadav, we help clients buy, sell, and invest in premium residential and commercial properties across Gurgaon.',
   trustTitle = 'Licensed & transparent',
   trustNote = 'Serving Gurgaon since 2005',

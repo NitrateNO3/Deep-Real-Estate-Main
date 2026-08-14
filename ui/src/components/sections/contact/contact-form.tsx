@@ -116,6 +116,20 @@ export type ContactFormProps = {
    * is a lead; a lead that reaches a browser console is not.
    */
   endpoint?: string;
+  /**
+   * Web3Forms access key. Set this and enquiries arrive as email in whichever
+   * inbox the key was issued to — a Gmail account, in our case. It takes
+   * precedence over `endpoint`.
+   *
+   * A key rather than the address itself: the bundle is public, so an email
+   * address written in here would be scraped and spammed within days. The key
+   * only lets a sender post *to* that inbox; it does not reveal it.
+   *
+   * Get one free at https://web3forms.com — enter the Gmail address, and the
+   * key is emailed to it. No account, no card. Paste it into
+   * WEB3FORMS_ACCESS_KEY below.
+   */
+  accessKey?: string;
   /** Office WhatsApp number for the fallback. Digits and + only. */
   whatsapp?: string;
   /** Fewer message rows, for viewport-height layouts. */
@@ -137,6 +151,43 @@ export type ContactFormProps = {
  * emailid, subject, message — so wiring it to the existing endpoint is a
  * one-to-one mapping rather than a re-spec.
  */
+/* ===========================================================================
+   EMAIL DELIVERY — paste the Web3Forms access key between the quotes.
+
+   1. Go to https://web3forms.com
+   2. Type the Gmail address the enquiries should land in, press Create.
+   3. The key arrives in that inbox. Paste it below.
+
+   That is the whole setup — no account, no card, no server. Leave it empty and
+   the form keeps handing enquiries to WhatsApp instead, which is what it does
+   today; nothing breaks either way.
+
+   Safe to commit: the key is write-only. It lets anyone send a message *to*
+   the inbox, which is what a public contact form is for, but it does not
+   reveal the address or read anything.
+   =========================================================================== */
+const WEB3FORMS_ACCESS_KEY = '';
+
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+
+/* Web3Forms turns the JSON keys into the labels in the email body, so the
+   payload is written for someone reading it on a phone rather than for the
+   database column names the form fields carry. */
+const composeEmailPayload = (v: ContactValues, accessKey: string) => ({
+  access_key: accessKey,
+  subject: `New enquiry — ${v.subject || 'Website'} — ${v.fullname}`,
+  from_name: 'deeprealestate.in',
+  // replying in Gmail then goes straight back to the enquirer
+  replyto: v.emailid || undefined,
+  Name: v.fullname,
+  Mobile: v.mobileno,
+  Email: v.emailid || '—',
+  'Enquiry about': v.subject || '—',
+  'Property type': v.propertytype || '—',
+  Location: v.location || '—',
+  Message: v.message || '—',
+});
+
 /** The enquiry as a WhatsApp message, for the no-endpoint fallback. */
 const composeMessage = (v: ContactValues) =>
   [
@@ -156,6 +207,7 @@ const composeMessage = (v: ContactValues) =>
 export const ContactForm = ({
   onSubmit,
   endpoint,
+  accessKey = WEB3FORMS_ACCESS_KEY,
   whatsapp = '+91-9810922338',
   compact = false,
   variant = 'card',
@@ -180,15 +232,30 @@ export const ContactForm = ({
 
     onSubmit?.(values);
 
-    if (endpoint) {
+    /* Email first when a key is configured, then any custom endpoint, then
+       WhatsApp. Each rung down is still a real delivery — the form never
+       silently drops a lead. */
+    const target = accessKey ? WEB3FORMS_ENDPOINT : endpoint;
+
+    if (target) {
       setStatus('sending');
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(target, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(values),
+          body: JSON.stringify(
+            accessKey ? composeEmailPayload(values, accessKey) : values,
+          ),
         });
+        /* Web3Forms answers 200 with {success:false} on a bad key, so the HTTP
+           status alone is not proof the mail went. Read the body when there is
+           one — a lead reported as sent but never delivered is the failure
+           this whole change exists to prevent. */
         if (!res.ok) throw new Error(String(res.status));
+        if (accessKey) {
+          const body = await res.json().catch(() => null);
+          if (body && body.success === false) throw new Error(body.message ?? 'rejected');
+        }
         form.reset();
         setStatus('sent');
       } catch {
