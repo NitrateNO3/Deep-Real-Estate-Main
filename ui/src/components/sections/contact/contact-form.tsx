@@ -117,19 +117,13 @@ export type ContactFormProps = {
    */
   endpoint?: string;
   /**
-   * Web3Forms access key. Set this and enquiries arrive as email in whichever
-   * inbox the key was issued to — a Gmail account, in our case. It takes
-   * precedence over `endpoint`.
+   * Where enquiries are emailed, via FormSubmit. Either the inbox address or —
+   * better — the FormSubmit alias that stands in for it. Takes precedence over
+   * `endpoint`.
    *
-   * A key rather than the address itself: the bundle is public, so an email
-   * address written in here would be scraped and spammed within days. The key
-   * only lets a sender post *to* that inbox; it does not reveal it.
-   *
-   * Get one free at https://web3forms.com — enter the Gmail address, and the
-   * key is emailed to it. No account, no card. Paste it into
-   * WEB3FORMS_ACCESS_KEY below.
+   * See FORMSUBMIT_TARGET below for why the alias is worth the extra step.
    */
-  accessKey?: string;
+  emailTo?: string;
   /** Office WhatsApp number for the fallback. Digits and + only. */
   whatsapp?: string;
   /** Fewer message rows, for viewport-height layouts. */
@@ -152,33 +146,43 @@ export type ContactFormProps = {
  * one-to-one mapping rather than a re-spec.
  */
 /* ===========================================================================
-   EMAIL DELIVERY — paste the Web3Forms access key between the quotes.
+   EMAIL DELIVERY — FormSubmit. Enquiries arrive as email in the inbox named
+   between the quotes below.
 
-   1. Go to https://web3forms.com
-   2. Type the Gmail address the enquiries should land in, press Create.
-   3. The key arrives in that inbox. Paste it below.
+   ACTIVATION: the very first submission does not deliver. FormSubmit replies
+   to that inbox with a confirmation link instead; open it once and every
+   submission from then on lands normally. Send one test enquiry yourself
+   after deploying, or the first real lead is the one that gets spent on it.
 
-   That is the whole setup — no account, no card, no server. Leave it empty and
-   the form keeps handing enquiries to WhatsApp instead, which is what it does
-   today; nothing breaks either way.
+   SWAP THIS FOR THE ALIAS once activated. FormSubmit issues a random-string
+   endpoint that delivers to the same inbox without naming it — it is in the
+   activation email. It matters here: this bundle is public and the repo is
+   public, so an address written in plain text is scraped and spammed. The
+   alias reads the same to the code and gives a spammer nothing.
 
-   Safe to commit: the key is write-only. It lets anyone send a message *to*
-   the inbox, which is what a public contact form is for, but it does not
-   reveal the address or read anything.
+   Leave it empty and the form keeps handing enquiries to WhatsApp instead;
+   nothing breaks either way.
    =========================================================================== */
-const WEB3FORMS_ACCESS_KEY = '';
+const FORMSUBMIT_TARGET = 'deeprealestate.responses@gmail.com';
 
-const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+/* The /ajax/ endpoint answers with JSON rather than redirecting to FormSubmit's
+   own thank-you page, so the visitor stays on the site and sees the form's own
+   confirmation. */
+const formsubmitEndpoint = (target: string) =>
+  `https://formsubmit.co/ajax/${encodeURIComponent(target)}`;
 
-/* Web3Forms turns the JSON keys into the labels in the email body, so the
+/* FormSubmit turns the JSON keys into the labels in the email body, so the
    payload is written for someone reading it on a phone rather than for the
-   database column names the form fields carry. */
-const composeEmailPayload = (v: ContactValues, accessKey: string) => ({
-  access_key: accessKey,
-  subject: `New enquiry — ${v.subject || 'Website'} — ${v.fullname}`,
-  from_name: 'deeprealestate.in',
+   database column names the form fields carry. Keys prefixed with _ are
+   FormSubmit's own settings and are not printed. */
+const composeEmailPayload = (v: ContactValues) => ({
+  _subject: `New enquiry — ${v.subject || 'Website'} — ${v.fullname}`,
+  // a table reads far better than FormSubmit's default run-on list
+  _template: 'table',
+  // no captcha page: an AJAX post cannot show one, and it would block the send
+  _captcha: 'false',
   // replying in Gmail then goes straight back to the enquirer
-  replyto: v.emailid || undefined,
+  _replyto: v.emailid || undefined,
   Name: v.fullname,
   Mobile: v.mobileno,
   Email: v.emailid || '—',
@@ -207,7 +211,7 @@ const composeMessage = (v: ContactValues) =>
 export const ContactForm = ({
   onSubmit,
   endpoint,
-  accessKey = WEB3FORMS_ACCESS_KEY,
+  emailTo = FORMSUBMIT_TARGET,
   whatsapp = '+91-9810922338',
   compact = false,
   variant = 'card',
@@ -232,10 +236,10 @@ export const ContactForm = ({
 
     onSubmit?.(values);
 
-    /* Email first when a key is configured, then any custom endpoint, then
+    /* Email first when a target is configured, then any custom endpoint, then
        WhatsApp. Each rung down is still a real delivery — the form never
        silently drops a lead. */
-    const target = accessKey ? WEB3FORMS_ENDPOINT : endpoint;
+    const target = emailTo ? formsubmitEndpoint(emailTo) : endpoint;
 
     if (target) {
       setStatus('sending');
@@ -243,18 +247,18 @@ export const ContactForm = ({
         const res = await fetch(target, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(
-            accessKey ? composeEmailPayload(values, accessKey) : values,
-          ),
+          body: JSON.stringify(emailTo ? composeEmailPayload(values) : values),
         });
-        /* Web3Forms answers 200 with {success:false} on a bad key, so the HTTP
-           status alone is not proof the mail went. Read the body when there is
-           one — a lead reported as sent but never delivered is the failure
-           this whole change exists to prevent. */
+        /* FormSubmit can answer 200 while still refusing the send — an
+           unactivated inbox is the common one. The HTTP status alone is not
+           proof the mail went, so read the body: a lead reported as sent but
+           never delivered is the failure this whole path exists to prevent.
+           `success` comes back as the *string* "true", not a boolean. */
         if (!res.ok) throw new Error(String(res.status));
-        if (accessKey) {
+        if (emailTo) {
           const body = await res.json().catch(() => null);
-          if (body && body.success === false) throw new Error(body.message ?? 'rejected');
+          const ok = body && (body.success === true || body.success === 'true');
+          if (!ok) throw new Error((body && body.message) || 'rejected');
         }
         form.reset();
         setStatus('sent');
