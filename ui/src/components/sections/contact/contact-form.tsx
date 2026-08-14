@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { LiquidMetalButton } from '@/components/ui/liquid-metal-button';
 import { GlassCard } from '@/components/ui/glass-card/glass-card';
+import { FormSuccessDialog } from '@/components/ui/form-success-dialog/form-success-dialog';
 import { cn } from '@/lib/utils';
 
 export type ContactValues = {
@@ -183,6 +184,17 @@ const composeEmailPayload = (v: ContactValues) => ({
   _captcha: 'false',
   // replying in Gmail then goes straight back to the enquirer
   _replyto: v.emailid || undefined,
+  /* Receipt for the enquirer, sent by FormSubmit to the address above. Plain
+     text — FormSubmit does not render HTML here, so markup would arrive as
+     literal tags. Deliberately promises only what the office can keep: that
+     it arrived and roughly when someone will reply. */
+  _autoresponse: `Thank you for contacting Deep Real Estate.
+
+We have received your enquiry and someone from our team will get back to you shortly. We reply within about 15 minutes between 9am and 10pm.
+
+If it is urgent, call us on +91-9810922338 and we will take the details over the phone.
+
+— Deep Real Estate, Gurugram`,
   Name: v.fullname,
   Mobile: v.mobileno,
   Email: v.emailid || '—',
@@ -220,8 +232,17 @@ export const ContactForm = ({
   const glass = variant === 'glass';
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
+  /* A submit lock. Deliberately a ref and not a `status === 'sending'` check:
+     two fast clicks on Send can both enter this handler before React re-renders
+     with the new status, so each would post its own copy and one enquiry would
+     arrive as two emails. A ref updates synchronously, so the second click sees
+     the lock the first one set. The button has no disabled state of its own. */
+  const sending = useRef(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (sending.current) return;
+    sending.current = true;
     const form = e.currentTarget;
     const fd = new FormData(form);
     const values: ContactValues = {
@@ -264,6 +285,9 @@ export const ContactForm = ({
         setStatus('sent');
       } catch {
         setStatus('error');
+      } finally {
+        // released only once the post has settled, so the lock spans the request
+        sending.current = false;
       }
       return;
     }
@@ -276,6 +300,7 @@ export const ContactForm = ({
     window.open(wa, '_blank', 'noopener,noreferrer');
     form.reset();
     setStatus('sent');
+    sending.current = false;
   };
 
   /* Filled fields with a real border read as "type here"; hairline outlines
@@ -428,29 +453,11 @@ export const ContactForm = ({
             fontSize={compact ? 14 : 15}
           />
 
-          {/* The form used to say nothing at all on submit — no confirmation,
-              no error, fields left full. aria-live so it is announced rather
-              than only seen. */}
+          {/* Success is the dialog below, not a note here: on a phone this sits
+              well below the fold and the visitor saw nothing happen. Failure
+              stays inline and next to the button — an error belongs beside the
+              form you still have to deal with, not behind a dismissal. */}
           <div aria-live="polite">
-            {status === 'sent' && (
-              <p
-                className={cn(
-                  'mt-3 flex items-start gap-2.5 rounded-xl border px-4 py-3 text-[14px] leading-snug',
-                  glass
-                    ? 'border-emerald-300/40 bg-emerald-400/15 text-white'
-                    : 'border-emerald-200 bg-emerald-50 text-emerald-900',
-                )}
-              >
-                <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m5 13 4 4L19 7" />
-                </svg>
-                <span>
-                  Thank you — your enquiry is on its way. We reply within about 15 minutes
-                  between 9am and 10pm.
-                </span>
-              </p>
-            )}
-
             {status === 'error' && (
               <p
                 className={cn(
@@ -476,6 +483,22 @@ export const ContactForm = ({
           </div>
         </div>
       </form>
+
+      {/* Closing it returns the form to idle, so a second enquiry from the same
+          visitor starts clean rather than re-opening the dialog. */}
+      <FormSuccessDialog
+        open={status === 'sent'}
+        onClose={() => setStatus('idle')}
+        phone={whatsapp}
+        /* The receipt email only goes out when FormSubmit is carrying the
+           enquiry. On the WhatsApp fallback there is no address to send it to,
+           so the dialog must not claim one was sent. */
+        blurb={
+          emailTo
+            ? 'We have sent a confirmation to your email. Someone from our team replies within about 15 minutes, between 9am and 10pm.'
+            : 'Someone from our team replies within about 15 minutes, between 9am and 10pm.'
+        }
+      />
     </Shell>
   );
 };
