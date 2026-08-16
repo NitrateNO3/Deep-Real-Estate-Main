@@ -29,8 +29,8 @@ export const AboutIntro = ({
   eyebrow = 'About Us',
   heading = 'Experience You Can Trust.',
   paragraphs = defaultParagraphs,
-  imageSrc = '/img/about/intro.jpg',
-  imageAlt = 'Interior of a Gurgaon residence',
+  imageSrc = '/img/about/office.jpg',
+  imageAlt = 'The Deep Real Estate office in Gurgaon',
   fill = false,
   className,
 }: AboutIntroProps) => {
@@ -48,14 +48,19 @@ export const AboutIntro = ({
           fill ? 'py-14 lg:py-10' : 'py-16 sm:py-24',
         )}
       >
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[45%_1fr] lg:gap-14">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[52%_1fr] lg:gap-14">
           {/* picture */}
           <figure className="relative">
             <div className="overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)]">
+              {/* 8/5 is the photograph's own ratio, so object-cover has nothing
+                  to crop. It matters for this picture specifically: the frame
+                  used to be 4/3 and 7/6 for a portrait-ish stock interior, and
+                  those would take the sign off the right edge and cut the car
+                  in half — the two things the photograph is of. */}
               <img
                 src={imageSrc}
                 alt={imageAlt}
-                className="aspect-[4/3] w-full object-cover lg:aspect-[7/6]"
+                className="aspect-[8/5] w-full object-cover"
                 loading="eager"
               />
             </div>

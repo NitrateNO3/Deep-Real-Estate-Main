@@ -38,15 +38,32 @@ const MailIcon = ({ className }: { className?: string }) => (
 );
 
 /**
- * A flat capture of the head-office map, cropped to a wide band with the marker
- * centred. It replaces the Google Maps embed that used to back this hero: the
- * embed was over a megabyte of script and tiles, it sat above the fold so
- * `loading="lazy"` never deferred it, and its live compositing layer left the
- * heading and lede rendering pale until something forced a repaint. One 134KB
- * image has none of those problems. "Open in Maps" below covers the case where
- * someone actually wants to pan around.
+ * The office itself, backing the hero. It replaced a flat capture of the map,
+ * which in turn had replaced a full Google Maps embed — the embed was over a
+ * megabyte of script and tiles above the fold, and its live compositing layer
+ * left the heading rendering pale until something forced a repaint.
+ *
+ * A photograph of the building beats a picture of a map here: the map is
+ * already the thing "Open in Maps" gives you, and someone checking the contact
+ * page is trying to recognise the place when they arrive.
+ *
+ * Shared with the About page rather than copied — one file, one crop to keep
+ * right.
  */
-const MAP_IMAGE = '/img/maps/head-office.webp';
+const HERO_IMAGE = '/img/about/office.jpg';
+
+/**
+ * Where "Open in Maps" goes.
+ *
+ * Deliberately not built from the address printed on this page. The two are
+ * written differently — the printed one reads "Sushant Lok-II Extn., …
+ * 122002", the Google listing reads "Block G, Sushant Lok 2, … 122011" — so
+ * searching the printed text does not reliably resolve to the office's own
+ * listing. This is the listing's own wording, which does. The plus code
+ * C3GR+88 Gurugram is the same point if it ever needs checking against a map.
+ */
+const MAP_QUERY =
+  'Deep Real Estate, Ground Floor, G-564, Block G, Sushant Lok 2, Sector 57, Gurugram, Haryana 122011';
 
 /**
  * Contact page.
@@ -65,22 +82,26 @@ export const ContactPage = ({
   className,
 }: ContactPageProps) => {
   const [contactOpen, setContactOpen] = useState(false);
-  const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`;
 
   return (
     <div className={cn('w-full bg-background', className)}>
       {/* ------------------------------------------------------------ hero */}
       <section className="relative isolate overflow-hidden bg-muted/60">
-        {/* map backdrop — decorative, so it carries no alt text */}
+        {/* office backdrop — decorative, so it carries no alt text.
+            No grayscale and no dark:invert: both were tuned for a map capture,
+            and inverting a photograph turns the sky black and the building
+            into a negative. Held back on opacity alone instead, which is what
+            keeps the heading readable over it. */}
         <img
-          src={MAP_IMAGE}
+          src={HERO_IMAGE}
           alt=""
           aria-hidden="true"
-          width={1920}
-          height={645}
+          width={1600}
+          height={1000}
           fetchPriority="high"
           decoding="async"
-          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-60 grayscale-[0.2] dark:opacity-35 dark:invert"
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-45 dark:opacity-30"
         />
         {/* wash, so headings sit on an even ground rather than on map detail */}
         <div
