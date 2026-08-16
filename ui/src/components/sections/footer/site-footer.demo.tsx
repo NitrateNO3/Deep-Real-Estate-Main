@@ -42,7 +42,7 @@ export const HomePage = () => (
         <SiteHeader activeIndex={0} />
       </div>
       <div className="lg:min-h-0 lg:flex-1">
-        <WelcomeSection fill />
+        <WelcomeSection fill backdrop />
       </div>
     </section>
 

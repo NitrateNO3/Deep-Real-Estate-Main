@@ -38,6 +38,19 @@ export type WelcomeSectionProps = {
    * it is the photograph that people end up looking at.
    */
   videoPoster?: string;
+  /**
+   * Run the footage full-bleed behind the whole section instead of inside a
+   * frame beside the copy, held back under a wash so the copy stays readable.
+   *
+   * The frame version cannot show a 16:9 clip at the height of a viewport-tall
+   * row without either cropping it hard or leaving the row half empty. As a
+   * backdrop the clip has the whole section to fill, and the space to the
+   * right of the copy — which the frame was competing for — becomes the part
+   * of it you actually see.
+   *
+   * Only applies when `videoSrc` is set; the still gallery keeps its frame.
+   */
+  backdrop?: boolean;
   /** Milliseconds between automatic advances. */
   interval?: number;
   /** Put the picture on the left instead of the right. */
@@ -85,6 +98,7 @@ export const WelcomeSection = ({
   images = defaultGallery,
   videoSrc = '/video/hero.mp4',
   videoPoster,
+  backdrop = false,
   interval = 3000,
   reverse = false,
   showActions = true,
@@ -148,14 +162,52 @@ export const WelcomeSection = ({
     return () => el.removeEventListener('canplay', start);
   }, [videoSrc]);
 
+  // Only the footage can be a backdrop; the gallery keeps its frame and rail.
+  const asBackdrop = Boolean(videoSrc) && backdrop;
+
   return (
     <section
       className={cn(
-        'relative w-full overflow-hidden bg-background',
+        'relative isolate w-full overflow-hidden bg-background',
         fill && 'lg:h-full lg:min-h-0',
         className,
       )}
     >
+      {asBackdrop && (
+        <>
+          <video
+            ref={videoRef}
+            className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover"
+            src={videoSrc}
+            /* A poster here, unlike in the framed version: full-bleed, the
+               alternative to a still is a blank screen the height of the
+               viewport for as long as the first bytes take to arrive. */
+            poster={videoPoster ?? '/img/bg/hero-poster.jpg'}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          {/* Legibility wash. Weighted across rather than evenly: the copy is
+              dark-on-light and sits left, so that side has to go nearly opaque,
+              while the right — which is the part of the clip anyone actually
+              looks at — keeps far more of it. An even veil at the strength the
+              text needs would have hidden the whole thing. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.92)_30%,rgba(255,255,255,0.70)_58%,rgba(255,255,255,0.45)_100%)] dark:bg-[linear-gradient(90deg,rgba(8,21,31,0.96)_0%,rgba(8,21,31,0.92)_30%,rgba(8,21,31,0.72)_58%,rgba(8,21,31,0.50)_100%)]"
+          />
+          {/* Softens the top and bottom edges into the header and whatever
+              follows, so the clip does not end on a hard line. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.55)_0%,transparent_18%,transparent_82%,rgba(255,255,255,0.65)_100%)] dark:bg-[linear-gradient(180deg,rgba(8,21,31,0.55)_0%,transparent_18%,transparent_82%,rgba(8,21,31,0.75)_100%)]"
+          />
+        </>
+      )}
       <div
         className={cn(
           'mx-auto max-w-[1400px] px-5 sm:px-8',
@@ -170,7 +222,13 @@ export const WelcomeSection = ({
         <div
           className={cn(
             'grid grid-cols-1 gap-10 lg:items-stretch lg:gap-x-10',
-            reverse ? 'lg:grid-cols-[1fr_36%]' : 'lg:grid-cols-[36%_1fr]',
+            // as a backdrop there is no second column to size — the copy keeps
+            // its own measure and the clip fills everything to the right of it
+            asBackdrop
+              ? 'lg:grid-cols-1'
+              : reverse
+                ? 'lg:grid-cols-[1fr_36%]'
+                : 'lg:grid-cols-[36%_1fr]',
             fill && 'lg:h-full lg:min-h-0',
           )}
         >
@@ -256,6 +314,7 @@ export const WelcomeSection = ({
           </div>
 
           {/* ------------------------------------------------------- picture */}
+          {!asBackdrop && (
           <figure className={cn(reverse ? 'lg:order-1' : 'lg:order-2')}>
             {/* h-full matters: the main frame below uses lg:h-full, and without
                 a definite height on every ancestor it resolves to auto and the
@@ -369,6 +428,7 @@ export const WelcomeSection = ({
               </div>
             </div>
           </figure>
+          )}
         </div>
       </div>
     </section>
