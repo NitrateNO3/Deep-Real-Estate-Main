@@ -1,45 +1,55 @@
 import { cn } from '@/lib/utils';
 
-export type Corridor = {
-  /** The road or pocket, as people actually name it. */
+export type Project = {
+  /** The scheme, named the way the notification names it. */
   name: string;
-  /** One line on what it is. Not a listing — a bearing. */
+  /** Where it has actually got to. Kept short enough to sit in a chip. */
+  status: string;
+  /** What it is, and what it changes for someone buying nearby. */
   body: string;
 };
 
 /**
- * The corridors, in the order a buyer tends to meet them: the established
- * address first, then what is being built next to it, then the newer ground.
+ * Cleared or under construction as of August 2026, with the figures as
+ * announced.
  *
- * Written as description rather than as numbers on purpose. A price or a
- * yield printed into the bundle is wrong within a quarter and nobody comes
- * back to correct it; what a road is *for* stays true, and it is the thing a
- * buyer new to Gurugram actually cannot look up.
+ * Every line here is checkable, which is the point: infrastructure copy on
+ * property sites is usually rumour with a number bolted on, and a buyer who
+ * catches one invented detail stops believing the rest of the page. Anything
+ * that could not be sourced was left out rather than rounded up. The dateline
+ * under the grid is load-bearing for the same reason — these move, and a page
+ * that implies otherwise ages into a lie.
  */
-const defaultCorridors: Corridor[] = [
+const defaultProjects: Project[] = [
   {
-    name: 'Golf Course Road',
-    body: 'The established spine. The phases and towers that set the ceiling here, and the address most buyers name before any other.',
+    name: 'Gurugram Metro',
+    status: 'Under construction',
+    body: 'A 28.5 km loop of 27 elevated stations, running the Millennium City Centre back round to Cyber City. Haryana cleared a revised ₹10,266 crore cost with World Bank funding; phase one is up on its pillars and the corridor is targeted for 2027.',
   },
   {
-    name: 'Golf Course Extension',
-    body: 'The same road, a decade younger. Newer towers, more space between them, and prices still finding their level.',
+    name: 'Greater Noida – Gurugram RRTS',
+    status: 'Alignment approved',
+    body: 'Regional rapid transit, with IFFCO Chowk and Sector 61 as combined RRTS-and-metro hubs and stops at Sector 29, Millennium City Centre, Sector 52, Wazirabad and Sector 57 — the last of which is our own sector.',
   },
   {
-    name: 'Sohna Road',
-    body: 'Where the middle of the market lives. Offices at one end, family housing at the other, and a short run between the two.',
+    name: 'Ghata – Vatika Chowk – NH48',
+    status: 'Announced',
+    body: 'A 14 km elevated corridor costed at about ₹2,900 crore, in two runs: Vatika Chowk to NH48, and Vatika Chowk through to Ghata. It is the Golf Course Extension traffic taken off the surface.',
   },
   {
-    name: 'Dwarka Expressway',
-    body: 'The corridor that redrew the map. Built for the city Gurugram is becoming rather than the one it grew out of.',
+    name: 'Five new flyovers',
+    status: 'Proposed',
+    body: 'Roughly ₹302 crore across Ambedkar Chowk, Dadi Sati Chowk, Z Chowk by the Millennium City Centre metro, Bakhtawar Chowk and the Garhi Harsaru crossing — the junctions that cost you the most minutes today.',
   },
   {
-    name: 'New Gurugram',
-    body: 'The sectors out past the highway. Larger townships, more air, and the feel of a city still laying itself out.',
+    name: 'Six-lane link to New Gurugram',
+    status: 'Approved',
+    body: 'The road tying the Delhi–Gurugram Expressway to the new sectors, cleared after roughly a decade of delay. The sectors it reaches are the ones whose access has been the argument against them.',
   },
   {
-    name: 'Sushant Lok & Sector 57',
-    body: 'Low-rise, planted, and settled. Our own street — which is the reason we can tell you which block is worth the asking price.',
+    name: 'GMDA road strengthening',
+    status: 'Funded',
+    body: 'About ₹249 crore of works, with ₹166 crore of it on rebuilding 64 km of master sector roads and 17 km of service roads — unglamorous, and the thing you feel daily.',
   },
 ];
 
@@ -47,13 +57,15 @@ export type GurugramSectionProps = {
   eyebrow?: string;
   heading?: string;
   lede?: string;
-  corridors?: Corridor[];
+  projects?: Project[];
+  /** Printed under the grid. These schemes move; the page should say when. */
+  asOf?: string;
   fill?: boolean;
   className?: string;
 };
 
 /**
- * Homepage section 2 — the city itself.
+ * Homepage section 2 — what the state is building.
  *
  * It replaces the developer marquee that used to sit here. A wall of other
  * firms' logos is a claim about who the firm knows; on the second screen of
@@ -62,9 +74,11 @@ export type GurugramSectionProps = {
  * marquee still exists, on the About page, where a claim about the firm
  * belongs.
  *
- * What stands here instead is the one thing a twenty-year local firm has that
- * a portal does not: knowing that the six roads are six different markets, and
- * being able to say how.
+ * What stands here instead is the news a buyer is actually shopping against:
+ * the metro, the rapid rail and the corridors the government has cleared, and
+ * what each one does to the ground near it. Every figure is sourced and every
+ * card carries its real status, because "proposed" and "under construction"
+ * are different news and a page that blurs them is worth nothing.
  *
  * The backdrop is drawn rather than filmed — a surveyor's grid under a wash of
  * the brand blue, fading out at the edges. Stock footage of a city that is not
@@ -72,10 +86,11 @@ export type GurugramSectionProps = {
  * and it cost 9MB to say less than a grid does.
  */
 export const GurugramSection = ({
-  eyebrow = 'The Millennium City',
-  heading = 'Gurugram is six markets wearing one name',
-  lede = 'Every corridor prices differently, builds differently and fills differently. Twenty years here is mostly knowing which one you are actually standing in.',
-  corridors = defaultCorridors,
+  eyebrow = 'What’s new in the city',
+  heading = 'The state is rebuilding the map around you',
+  lede = 'Metro, rapid rail, elevated corridors — cleared or already under construction. Where these land is what a sector will be worth, usually well before the asking price catches up.',
+  projects = defaultProjects,
+  asOf = 'Status as announced, August 2026',
   fill = false,
   className,
 }: GurugramSectionProps) => {
@@ -152,9 +167,9 @@ export const GurugramSection = ({
             fill ? 'mt-10' : 'mt-14',
           )}
         >
-          {corridors.map((c, i) => (
+          {projects.map((p) => (
             <li
-              key={c.name}
+              key={p.name}
               /* A lit face rather than flat white at 4%: with a drawn ground
                  behind it there is nothing to frost, so the card earns its
                  edge from a top-down gradient and a hairline instead. */
@@ -166,16 +181,26 @@ export const GurugramSection = ({
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-sky-300/25 transition-colors duration-300 group-hover/corridor:bg-sky-300"
               />
-              <p className="text-[11px] font-bold tabular-nums tracking-[0.18em] text-sky-300/80">
-                {String(i + 1).padStart(2, '0')}
+              {/* The status carries most of the weight on this card — "under
+                  construction" and "proposed" are entirely different news to
+                  someone deciding where to buy, and burying that inside the
+                  paragraph would let the section read as six done deals. */}
+              <p className="inline-flex items-center gap-1.5 rounded-full border border-sky-300/25 bg-sky-300/10 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-sky-200">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-sky-300" />
+                {p.status}
               </p>
-              <h3 className="mt-2 text-[19px] font-bold leading-tight tracking-tight text-white">
-                {c.name}
+              <h3 className="mt-3 text-[19px] font-bold leading-tight tracking-tight text-white">
+                {p.name}
               </h3>
-              <p className="mt-2 text-[14.5px] leading-[1.6] text-white/65">{c.body}</p>
+              <p className="mt-2 text-[14.5px] leading-[1.6] text-white/65">{p.body}</p>
             </li>
           ))}
         </ul>
+
+        {/* Dated on purpose. Every figure above is somebody's announcement, and
+            announcements move — a page that prints them undated is claiming a
+            currency it cannot keep. */}
+        <p className="mt-8 text-center text-[12.5px] text-white/45">{asOf}</p>
       </div>
     </section>
   );
