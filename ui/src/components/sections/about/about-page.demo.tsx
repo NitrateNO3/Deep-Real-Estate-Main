@@ -89,10 +89,11 @@ export const AboutPage = () => (
     <section>
       {/* beliefs off: "Why Deep Real Estate?" above already answers this, in
           the firm's own words rather than in four generic claims.
-          partners off too: the marquee immediately above is the same sixteen
-          logos, and running the wall again under it said the same thing twice
-          on one scroll. What is left in the panel is the closing ask. */}
-      <AboutMission beliefs={[]} partners={[]} />
+          The logo mosaic stays. It repeats the marquee above deliberately —
+          the marquee is motion you watch go past, the mosaic is the full set
+          held still next to the closing ask, where someone checking for a
+          particular developer can actually find it. */}
+      <AboutMission beliefs={[]} />
     </section>
     <section>
       <SiteFooter />
