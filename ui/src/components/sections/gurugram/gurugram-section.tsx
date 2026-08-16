@@ -82,31 +82,48 @@ export const GurugramSection = ({
   return (
     <section
       className={cn(
-        'relative isolate w-full overflow-hidden bg-[#06121b]',
+        /* A marine navy that carries some blue rather than the near-black the
+           footage needed behind it. With nothing to hold back any more, the
+           ground can be the brand's own colour family instead of a neutral
+           dark, and the grid and the copy both read warmer against it. */
+        'relative isolate w-full overflow-hidden bg-[#071c2e]',
         fill && 'lg:flex lg:h-full lg:min-h-0 lg:items-center',
         className,
       )}
     >
-      {/* Surveyor's grid. Masked to fade out well before the edges, so it
-          reads as texture under the copy rather than as a table drawn round
-          it — an unmasked grid running into the section's corners is the
-          thing that makes this treatment look like a placeholder. */}
+      {/* Depth on the ground itself — lighter at the top left where the wash
+          falls, settling to near-black at the bottom. A single flat fill under
+          a grid is what reads as unfinished. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[length:72px_72px] [mask-image:radial-gradient(ellipse_75%_65%_at_50%_45%,#000_35%,transparent_100%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,#0d2c46_0%,#082034_38%,#051625_72%,#030f1a_100%)]"
+      />
+      {/* Surveyor's grid, drawn in the brand blue rather than white so it
+          belongs to the ground it sits on. Masked to fade well before the
+          edges: an unmasked grid running into the corners reads as a table
+          drawn around the copy instead of texture under it. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(56,189,248,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(56,189,248,0.10)_1px,transparent_1px)] bg-[length:72px_72px] [mask-image:radial-gradient(ellipse_78%_68%_at_50%_45%,#000_38%,transparent_100%)]"
+      />
+      {/* Every twelfth line heavier, the way a plan sheet marks its majors —
+          it gives the grid a scale instead of one uniform mesh. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(56,189,248,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(56,189,248,0.16)_1px,transparent_1px)] bg-[length:288px_288px] [mask-image:radial-gradient(ellipse_78%_68%_at_50%_45%,#000_38%,transparent_100%)]"
       />
       {/* Brand-blue wash falling from the top edge, and a second, tighter one
-          under the heading — together they lift the middle of the section off
-          the flat navy so the cards have something to sit on. */}
+          under the heading — together they lift the middle of the section so
+          the cards have something to sit on. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[radial-gradient(70%_55%_at_50%_-10%,rgba(0,128,198,0.30)_0%,transparent_65%),radial-gradient(40%_30%_at_50%_28%,rgba(11,154,224,0.16)_0%,transparent_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(72%_58%_at_50%_-12%,rgba(0,128,198,0.38)_0%,transparent_66%),radial-gradient(42%_32%_at_50%_30%,rgba(11,154,224,0.18)_0%,transparent_72%)]"
       />
-      {/* Floor and ceiling, so the section closes cleanly against whatever
-          white sits above and below it on the page. */}
+      {/* Floor and ceiling, so the section closes cleanly against the white
+          that sits above and below it on the page. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(6,18,27,0.55)_0%,transparent_22%,transparent_78%,rgba(6,18,27,0.85)_100%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(3,15,26,0.55)_0%,transparent_20%,transparent_80%,rgba(3,15,26,0.90)_100%)]"
       />
 
       <div
