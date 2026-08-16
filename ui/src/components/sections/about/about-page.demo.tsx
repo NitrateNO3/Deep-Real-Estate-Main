@@ -27,14 +27,17 @@ export const Mission = () => (
 
 /**
  * The About Us page.
- *   nav → breadcrumb → intro → why us → services → founder → mission → footer
+ *   nav → breadcrumb → intro → why us → founder → services → mission → footer
  *
  * Scrolls normally, same as every other page — screens are still sized to the
  * viewport, but nothing snaps the scroll to their boundaries.
  *
  * The order is the firm's own argument, in the order it makes it: who we are,
- * why us, what we do, who is behind it — and only then the mission and the
- * developer network, which are context rather than claims.
+ * why us, who is behind it, what we do — and only then the mission and the
+ * developer network, which are context rather than claims. The founder sits
+ * directly after the case for the firm because he is the answer to it: the
+ * reason to trust the claims above is the person who has been making good on
+ * them since 2005.
  */
 export const AboutPage = () => (
   <div className="min-h-dvh scroll-smooth bg-background">
@@ -69,10 +72,10 @@ export const AboutPage = () => (
       <AboutWhy />
     </section>
     <section>
-      <AboutServices />
+      <AboutFounder />
     </section>
     <section>
-      <AboutFounder />
+      <AboutServices />
     </section>
     <section>
       {/* beliefs off: "Why Deep Real Estate?" above already answers this, in
