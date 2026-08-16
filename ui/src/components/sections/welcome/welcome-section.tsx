@@ -169,10 +169,13 @@ export const WelcomeSection = ({
           )}
         >
           {/* ---------------------------------------------------------- text */}
+          {/* 5 / 7 rather than a even split: the picture is the half that has
+              to fill a viewport-height row, and the copy reads perfectly well
+              at its own measure without the extra column. */}
           <div
             className={cn(
-              'flex flex-col justify-center lg:col-span-6',
-              reverse ? 'lg:order-2 lg:col-start-7' : 'lg:order-1 lg:col-start-1',
+              'flex flex-col justify-center lg:col-span-5',
+              reverse ? 'lg:order-2 lg:col-start-8' : 'lg:order-1 lg:col-start-1',
             )}
           >
             {/* one shared measure keeps every line flush to the same right edge */}
@@ -252,8 +255,8 @@ export const WelcomeSection = ({
           {/* ------------------------------------------------------- picture */}
           <figure
             className={cn(
-              'lg:col-span-6',
-              reverse ? 'lg:order-1 lg:col-start-1' : 'lg:order-2 lg:col-start-7',
+              'lg:col-span-7',
+              reverse ? 'lg:order-1 lg:col-start-1' : 'lg:order-2 lg:col-start-6',
             )}
           >
             {/* h-full matters: the main frame below uses lg:h-full, and without
@@ -273,16 +276,23 @@ export const WelcomeSection = ({
                 {/* main frame — the video, or all stills stacked and crossfaded.
                     On white the frame needs its own border and shadow to have
                     an edge. */}
-                {/* The still gallery stretches to the column's full height —
-                    a photograph crops to any shape without losing its subject.
-                    The footage does not: it is 16:9, and the column on a wide
-                    screen is taller than it is wide, so filling that height
-                    cropped a room down to the middle of a sofa. Give the video
-                    its own ratio and let the column keep the leftover space. */}
+                {/* The still gallery stretches to the column's full height — a
+                    photograph crops to any shape without losing its subject.
+                    The footage cannot: filling a viewport-height column with a
+                    16:9 source would crop it to a vertical slot through the
+                    middle.
+                    So the video keeps a ratio of its own, and on a wide screen
+                    that ratio tightens to 3/2. At 16:9 in this column the frame
+                    came out barely half the height of the copy beside it and
+                    the row read as mostly empty; 3/2 trims about 8% off each
+                    side, which the footage can spare — its subject is centred —
+                    and buys back the height that fills the screen. */}
                 <div
                   className={cn(
                     'relative min-w-0 flex-1 overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)]',
-                    videoSrc ? 'aspect-video' : 'aspect-[4/3] lg:aspect-auto lg:h-full',
+                    videoSrc
+                      ? 'aspect-video lg:aspect-[3/2]'
+                      : 'aspect-[4/3] lg:aspect-auto lg:h-full',
                   )}
                 >
                   {videoSrc ? (
