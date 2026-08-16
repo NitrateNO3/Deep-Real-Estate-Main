@@ -162,20 +162,23 @@ export const WelcomeSection = ({
           fill ? 'py-12 lg:h-full lg:py-10' : 'py-16 sm:py-24 lg:py-28',
         )}
       >
+        {/* An explicit fraction rather than 12 columns: the split that suits
+            this row falls between two column boundaries, and rounding it to
+            the nearest one cost the picture more width than the copy could
+            usefully take. The picture holds the 1fr track; reversing swaps
+            which side that track is on. */}
         <div
           className={cn(
-            'grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-stretch lg:gap-x-12',
+            'grid grid-cols-1 gap-10 lg:items-stretch lg:gap-x-10',
+            reverse ? 'lg:grid-cols-[1fr_36%]' : 'lg:grid-cols-[36%_1fr]',
             fill && 'lg:h-full lg:min-h-0',
           )}
         >
           {/* ---------------------------------------------------------- text */}
-          {/* 5 / 7 rather than a even split: the picture is the half that has
-              to fill a viewport-height row, and the copy reads perfectly well
-              at its own measure without the extra column. */}
           <div
             className={cn(
-              'flex flex-col justify-center lg:col-span-5',
-              reverse ? 'lg:order-2 lg:col-start-8' : 'lg:order-1 lg:col-start-1',
+              'flex flex-col justify-center',
+              reverse ? 'lg:order-2' : 'lg:order-1',
             )}
           >
             {/* one shared measure keeps every line flush to the same right edge */}
@@ -253,12 +256,7 @@ export const WelcomeSection = ({
           </div>
 
           {/* ------------------------------------------------------- picture */}
-          <figure
-            className={cn(
-              'lg:col-span-7',
-              reverse ? 'lg:order-1 lg:col-start-1' : 'lg:order-2 lg:col-start-6',
-            )}
-          >
+          <figure className={cn(reverse ? 'lg:order-1' : 'lg:order-2')}>
             {/* h-full matters: the main frame below uses lg:h-full, and without
                 a definite height on every ancestor it resolves to auto and the
                 picture collapses to nothing. */}
