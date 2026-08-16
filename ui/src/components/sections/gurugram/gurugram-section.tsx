@@ -7,49 +7,69 @@ export type Project = {
   status: string;
   /** What it is, and what it changes for someone buying nearby. */
   body: string;
+  /** The report this card is drawn from. Opens in a new tab. */
+  href: string;
+  /** Masthead, shown on the card. Who says so is part of the claim. */
+  source: string;
 };
 
 /**
- * Cleared or under construction as of August 2026, with the figures as
- * announced.
+ * Cleared or under construction as of August 2026.
  *
- * Every line here is checkable, which is the point: infrastructure copy on
- * property sites is usually rumour with a number bolted on, and a buyer who
- * catches one invented detail stops believing the rest of the page. Anything
- * that could not be sourced was left out rather than rounded up. The dateline
- * under the grid is load-bearing for the same reason — these move, and a page
- * that implies otherwise ages into a lie.
+ * Every card links the report it was written from, and every figure on it was
+ * read back off that report — not off a search summary. That check was worth
+ * doing: it caught a cost taken from a different scheme's figure, two flyover
+ * junctions that were never in the list, and a completion year no source
+ * carried. Infrastructure copy on property sites is usually rumour with a
+ * number bolted on, and one detail a buyer can falsify costs you the rest of
+ * the page.
+ *
+ * So the rule for editing this array: if the linked piece does not say it,
+ * it does not go in. Anything that could not be sourced was dropped rather
+ * than rounded up, which is why some of these are shorter than they could be.
  */
 const defaultProjects: Project[] = [
   {
     name: 'Gurugram Metro',
     status: 'Under construction',
-    body: 'A 28.5 km loop of 27 elevated stations, running the Millennium City Centre back round to Cyber City. Haryana cleared a revised ₹10,266 crore cost with World Bank funding; phase one is up on its pillars and the corridor is targeted for 2027.',
+    body: 'A 28.5 km corridor of 27 stations, running the Millennium City Centre through to Cyber City. The Haryana Cabinet cleared a revised cost of ₹10,266 crore — close to double the original — with the soft-loan component moving to World Bank funding.',
+    href: 'https://www.tribuneindia.com/news/gurugram/gurugram-metro-project-cost-nearly-doubles-to-rs-10266-crore-haryana-cabinet-clears-revised-plan/',
+    source: 'The Tribune',
   },
   {
     name: 'Greater Noida – Gurugram RRTS',
     status: 'Alignment approved',
-    body: 'Regional rapid transit, with IFFCO Chowk and Sector 61 as combined RRTS-and-metro hubs and stops at Sector 29, Millennium City Centre, Sector 52, Wazirabad and Sector 57 — the last of which is our own sector.',
+    body: 'Haryana has approved the final alignment. IFFCO Chowk and Sector 61 become combined RRTS-and-metro hubs, with further stations at Sector 29, Millennium City Centre, Sector 52, Wazirabad, Sector 57 and Sector 58/61 — and Sector 57 is our own.',
+    href: 'https://indianinfrastructure.com/2026/03/02/haryana-government-approves-final-alignment-for-greater-noida-gurugram-rrts-project/',
+    source: 'Indian Infrastructure',
   },
   {
     name: 'Ghata – Vatika Chowk – NH48',
-    status: 'Announced',
-    body: 'A 14 km elevated corridor costed at about ₹2,900 crore, in two runs: Vatika Chowk to NH48, and Vatika Chowk through to Ghata. It is the Golf Course Extension traffic taken off the surface.',
+    status: 'In the state budget',
+    body: 'An eight-lane elevated road from Ghata to Vatika Chowk and on to NH48, estimated at about ₹2,900 crore. It is the Golf Course Extension traffic taken off the surface.',
+    href: 'https://swarajyamag.com/news-brief/haryana-budget-2026-gurugram-receives-2900-crore-elevated-road-and-five-flyovers-to-ease-traffic-congestion',
+    source: 'Swarajya',
   },
   {
     name: 'Five new flyovers',
-    status: 'Proposed',
-    body: 'Roughly ₹302 crore across Ambedkar Chowk, Dadi Sati Chowk, Z Chowk by the Millennium City Centre metro, Bakhtawar Chowk and the Garhi Harsaru crossing — the junctions that cost you the most minutes today.',
+    status: 'In the state budget',
+    body: '₹302 crore allocated across Ambedkar Chowk, Dadi Sati Chowk, Millennium City Centre, Bakhtawar Chowk and the Garhi railway crossing near Basai — the junctions that cost you the most minutes today.',
+    href: 'https://swarajyamag.com/news-brief/haryana-budget-2026-gurugram-receives-2900-crore-elevated-road-and-five-flyovers-to-ease-traffic-congestion',
+    source: 'Swarajya',
   },
   {
-    name: 'Six-lane link to New Gurugram',
-    status: 'Approved',
-    body: 'The road tying the Delhi–Gurugram Expressway to the new sectors, cleared after roughly a decade of delay. The sectors it reaches are the ones whose access has been the argument against them.',
+    name: 'Sector 78–80 link road',
+    status: 'Sanctioned',
+    body: 'A 2.4 km six-lane corridor tying the Delhi–Gurugram Expressway to Naurangpur through Sectors 78 to 80, at ₹29 crore. Sanctioned after nearly ten years lost to encroachments, and reckoned at about two years to build.',
+    href: 'https://swarajyamag.com/news-brief/after-10-year-delay-haryana-approves-6-lane-road-connecting-delhi-gurugram-expressway-to-new-gurugram-sectors',
+    source: 'Swarajya',
   },
   {
     name: 'GMDA road strengthening',
     status: 'Funded',
-    body: 'About ₹249 crore of works, with ₹166 crore of it on rebuilding 64 km of master sector roads and 17 km of service roads — unglamorous, and the thing you feel daily.',
+    body: '₹249.77 crore of works, ₹166 crore of it rebuilding 64 km of master sector roads and 17.2 km of service roads. Unglamorous, and the part you feel every single day.',
+    href: 'https://www.tribuneindia.com/news/haryana/haryana-cm-approves-rs-249-crore-infrastructure-development-projects-for-gurugram',
+    source: 'The Tribune',
   },
 ];
 
@@ -168,13 +188,19 @@ export const GurugramSection = ({
           )}
         >
           {projects.map((p) => (
-            <li
-              key={p.name}
-              /* A lit face rather than flat white at 4%: with a drawn ground
-                 behind it there is nothing to frost, so the card earns its
-                 edge from a top-down gradient and a hairline instead. */
-              className="group/corridor relative overflow-hidden rounded-2xl border border-white/12 bg-[linear-gradient(160deg,rgba(255,255,255,0.075)_0%,rgba(255,255,255,0.03)_55%,rgba(255,255,255,0.015)_100%)] p-5 shadow-[0_18px_40px_-28px_rgb(0_0_0/0.9)] transition-all duration-300 hover:-translate-y-1 hover:border-sky-300/45 hover:bg-[linear-gradient(160deg,rgba(255,255,255,0.11)_0%,rgba(255,255,255,0.05)_55%,rgba(255,255,255,0.02)_100%)] sm:p-6"
-            >
+            <li key={p.name} className="min-w-0">
+              {/* The whole card is the link, not a "read more" at the bottom of
+                  it — on a phone the card is the tap target you actually hit,
+                  and a 12px link inside it is the one you miss. */}
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noreferrer"
+                /* A lit face rather than flat white at 4%: with a drawn ground
+                   behind it there is nothing to frost, so the card earns its
+                   edge from a top-down gradient and a hairline instead. */
+                className="group/corridor relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/12 bg-[linear-gradient(160deg,rgba(255,255,255,0.075)_0%,rgba(255,255,255,0.03)_55%,rgba(255,255,255,0.015)_100%)] p-5 shadow-[0_18px_40px_-28px_rgb(0_0_0/0.9)] transition-all duration-300 hover:-translate-y-1 hover:border-sky-300/45 hover:bg-[linear-gradient(160deg,rgba(255,255,255,0.11)_0%,rgba(255,255,255,0.05)_55%,rgba(255,255,255,0.02)_100%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071c2e] sm:p-6"
+              >
               {/* the rule fills in from the left on hover — the same marker the
                   About page uses on its mission plates */}
               <span
@@ -185,7 +211,9 @@ export const GurugramSection = ({
                   construction" and "proposed" are entirely different news to
                   someone deciding where to buy, and burying that inside the
                   paragraph would let the section read as six done deals. */}
-              <p className="inline-flex items-center gap-1.5 rounded-full border border-sky-300/25 bg-sky-300/10 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-sky-200">
+              {/* self-start, or the card's flex column stretches the chip to
+                  the full width and it stops reading as a chip */}
+              <p className="inline-flex self-start items-center gap-1.5 rounded-full border border-sky-300/25 bg-sky-300/10 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-sky-200">
                 <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-sky-300" />
                 {p.status}
               </p>
@@ -193,6 +221,31 @@ export const GurugramSection = ({
                 {p.name}
               </h3>
               <p className="mt-2 text-[14.5px] leading-[1.6] text-white/65">{p.body}</p>
+
+              {/* Masthead and an arrow, pinned to the foot of the card by
+                  mt-auto so the six read as one row however the copy wraps.
+                  Naming the paper matters: an unattributed figure about public
+                  money is just a claim, and this is the difference between
+                  the section reporting and the section boasting. */}
+              <span className="mt-auto flex items-center gap-1.5 pt-4 text-[12px] font-semibold text-sky-300/75 transition-colors duration-300 group-hover/corridor:text-sky-200">
+                {p.source}
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover/corridor:translate-x-0.5 group-hover/corridor:-translate-y-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 17 17 7M9 7h8v8" />
+                </svg>
+                {/* the destination is a different site, so say so for anyone
+                    who cannot see the arrow */}
+                <span className="sr-only">— opens {p.source} in a new tab</span>
+              </span>
+              </a>
             </li>
           ))}
         </ul>
