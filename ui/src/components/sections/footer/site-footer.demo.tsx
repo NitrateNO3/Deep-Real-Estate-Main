@@ -1,6 +1,6 @@
 import { SiteHeader } from '@/components/ui/navbar/site-header';
 import { WelcomeSection } from '@/components/sections/welcome/welcome-section';
-import { BrandsSection } from '@/components/sections/brands/brands-section';
+import { GurugramSection } from '@/components/sections/gurugram/gurugram-section';
 import { MapsSection } from '@/components/sections/maps/maps-section';
 import { StatsBand } from '@/components/sections/stats/stats-band';
 import { PropertiesSection } from '@/components/sections/properties/properties-section';
@@ -22,7 +22,7 @@ export const Standalone = () => (
 /**
  * The full home page — seven screens.
  *   1 · header + welcome
- *   2 · ask about property
+ *   2 · Gurugram, corridor by corridor
  *   3 · maps + stats strip
  *   4 · featured & top properties
  *   5 · reviews
@@ -47,7 +47,7 @@ export const HomePage = () => (
     </section>
 
     <section className="lg:h-dvh">
-      <BrandsSection fill />
+      <GurugramSection fill />
     </section>
 
     <section className="flex flex-col lg:min-h-dvh">

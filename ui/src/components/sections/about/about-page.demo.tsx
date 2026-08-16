@@ -8,6 +8,7 @@ import { AboutWhy } from './about-why';
 import { AboutServices } from './about-services';
 import { AboutFounder } from './about-founder';
 import { AboutMission } from './about-mission';
+import { BrandsSection } from '@/components/sections/brands/brands-section';
 
 /** Section 1 on its own. */
 export const Intro = () => (
@@ -77,11 +78,21 @@ export const AboutPage = () => (
     <section>
       <AboutServices />
     </section>
+    {/* The developer marquee, moved off the home page. A wall of other firms'
+        names is a claim about this firm, so it belongs on the page that makes
+        the firm's case — and it sets up the mission statement directly under
+        it. Sized to its content: on the home page it held a full screen, but
+        here it is one band in a longer argument. */}
+    <section>
+      <BrandsSection />
+    </section>
     <section>
       {/* beliefs off: "Why Deep Real Estate?" above already answers this, in
-          the firm's own words rather than in four generic claims. What is left
-          here is the mission, the developer network and the closing ask. */}
-      <AboutMission beliefs={[]} />
+          the firm's own words rather than in four generic claims.
+          partners off too: the marquee immediately above is the same sixteen
+          logos, and running the wall again under it said the same thing twice
+          on one scroll. What is left in the panel is the closing ask. */}
+      <AboutMission beliefs={[]} partners={[]} />
     </section>
     <section>
       <SiteFooter />
