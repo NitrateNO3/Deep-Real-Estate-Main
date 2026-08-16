@@ -42,7 +42,12 @@ export const HomePage = () => (
         <SiteHeader activeIndex={0} />
       </div>
       <div className="lg:min-h-0 lg:flex-1">
-        <WelcomeSection fill backdrop />
+        {/* Framed, not `backdrop`. The clip is a title card — it carries the
+            firm's own logo and a line of services across its full width — so
+            running it behind the copy put a second "Deep Real Estate" beside
+            the heading and pushed its services line through the trust badge.
+            A card needs an edge. */}
+        <WelcomeSection fill />
       </div>
     </section>
 

@@ -338,18 +338,17 @@ export const WelcomeSection = ({
                     The footage cannot: filling a viewport-height column with a
                     16:9 source would crop it to a vertical slot through the
                     middle.
-                    So the video keeps a ratio of its own, and on a wide screen
-                    that ratio tightens to 3/2. At 16:9 in this column the frame
-                    came out barely half the height of the copy beside it and
-                    the row read as mostly empty; 3/2 trims about 8% off each
-                    side, which the footage can spare — its subject is centred —
-                    and buys back the height that fills the screen. */}
+                    So the video keeps its own 16:9 and the column carries the
+                    leftover height. This frame briefly tightened to 3/2 on wide
+                    screens to fill more of the row, which was fine for footage
+                    with a centred subject — but the clip here runs a line of
+                    services from edge to edge, and cropping 8% off each side
+                    started eating the first and last words of it. Height is
+                    worth less than the copy the client put in the frame. */}
                 <div
                   className={cn(
                     'relative min-w-0 flex-1 overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)]',
-                    videoSrc
-                      ? 'aspect-video lg:aspect-[3/2]'
-                      : 'aspect-[4/3] lg:aspect-auto lg:h-full',
+                    videoSrc ? 'aspect-video' : 'aspect-[4/3] lg:aspect-auto lg:h-full',
                   )}
                 >
                   {videoSrc ? (
