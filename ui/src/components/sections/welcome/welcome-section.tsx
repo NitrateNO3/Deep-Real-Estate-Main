@@ -262,14 +262,29 @@ export const WelcomeSection = ({
             <div className="relative h-full">
               {/* Main frame + vertical rail on the plain page background. */}
               <div
-                className="relative flex h-full gap-4"
+                className={cn(
+                  'relative flex h-full gap-4',
+                  // the footage frame is shorter than the column, so centre it
+                  videoSrc && 'items-center',
+                )}
                 onMouseEnter={() => (paused.current = true)}
                 onMouseLeave={() => (paused.current = false)}
               >
                 {/* main frame — the video, or all stills stacked and crossfaded.
                     On white the frame needs its own border and shadow to have
                     an edge. */}
-                <div className="relative aspect-[4/3] min-w-0 flex-1 overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)] lg:aspect-auto lg:h-full">
+                {/* The still gallery stretches to the column's full height —
+                    a photograph crops to any shape without losing its subject.
+                    The footage does not: it is 16:9, and the column on a wide
+                    screen is taller than it is wide, so filling that height
+                    cropped a room down to the middle of a sofa. Give the video
+                    its own ratio and let the column keep the leftover space. */}
+                <div
+                  className={cn(
+                    'relative min-w-0 flex-1 overflow-hidden rounded-2xl border bg-muted shadow-[0_24px_56px_-28px_rgb(0_0_0/0.35)]',
+                    videoSrc ? 'aspect-video' : 'aspect-[4/3] lg:aspect-auto lg:h-full',
+                  )}
+                >
                   {videoSrc ? (
                     <video
                       ref={videoRef}
