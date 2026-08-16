@@ -38,19 +38,15 @@ const MailIcon = ({ className }: { className?: string }) => (
 );
 
 /**
- * The office itself, backing the hero. It replaced a flat capture of the map,
- * which in turn had replaced a full Google Maps embed — the embed was over a
- * megabyte of script and tiles above the fold, and its live compositing layer
- * left the heading rendering pale until something forced a repaint.
- *
- * A photograph of the building beats a picture of a map here: the map is
- * already the thing "Open in Maps" gives you, and someone checking the contact
- * page is trying to recognise the place when they arrive.
- *
- * Shared with the About page rather than copied — one file, one crop to keep
- * right.
+ * A flat capture of the head-office map, cropped to a wide band with the marker
+ * centred. It replaces the Google Maps embed that used to back this hero: the
+ * embed was over a megabyte of script and tiles, it sat above the fold so
+ * `loading="lazy"` never deferred it, and its live compositing layer left the
+ * heading and lede rendering pale until something forced a repaint. One 134KB
+ * image has none of those problems. "Open in Maps" below covers the case where
+ * someone actually wants to pan around.
  */
-const HERO_IMAGE = '/img/about/office.jpg';
+const MAP_IMAGE = '/img/maps/head-office.webp';
 
 /**
  * Where "Open in Maps" goes.
@@ -88,20 +84,16 @@ export const ContactPage = ({
     <div className={cn('w-full bg-background', className)}>
       {/* ------------------------------------------------------------ hero */}
       <section className="relative isolate overflow-hidden bg-muted/60">
-        {/* office backdrop — decorative, so it carries no alt text.
-            No grayscale and no dark:invert: both were tuned for a map capture,
-            and inverting a photograph turns the sky black and the building
-            into a negative. Held back on opacity alone instead, which is what
-            keeps the heading readable over it. */}
+        {/* map backdrop — decorative, so it carries no alt text */}
         <img
-          src={HERO_IMAGE}
+          src={MAP_IMAGE}
           alt=""
           aria-hidden="true"
-          width={1600}
-          height={1000}
+          width={1920}
+          height={645}
           fetchPriority="high"
           decoding="async"
-          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-45 dark:opacity-30"
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-60 grayscale-[0.2] dark:opacity-35 dark:invert"
         />
         {/* wash, so headings sit on an even ground rather than on map detail */}
         <div
