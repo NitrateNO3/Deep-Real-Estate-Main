@@ -43,7 +43,7 @@ const defaultSteps: FlowStep[] = [
   {
     step: '02',
     title: 'Choose Location',
-    body: 'Pick your preferred sector or locality across the Gurgaon market.',
+    body: 'Pick your preferred sector or locality across the Gurugram market.',
     colorTheme: 'orange',
   },
   {

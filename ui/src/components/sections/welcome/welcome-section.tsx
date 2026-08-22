@@ -4,9 +4,9 @@ import { StarButton } from '@/components/ui/star-button';
 import { useIsDark } from '@/lib/use-is-dark';
 
 const defaultGallery = [
-  { src: '/img/welcome.jpg', alt: 'A bright living space in a Gurgaon residence' },
+  { src: '/img/welcome.jpg', alt: 'A bright living space in a Gurugram residence' },
   { src: '/img/props/p1.jpg', alt: 'Entrance of a residence in DLF Phase 5' },
-  { src: '/img/props/p3.jpg', alt: 'Interior corridor of a Gurgaon apartment' },
+  { src: '/img/props/p3.jpg', alt: 'Interior corridor of a Gurugram apartment' },
   { src: '/img/props/p4.jpg', alt: 'Commercial floor plate in Cyber City' },
   { src: '/img/props/p6.jpg', alt: 'Residential plot in Sector 57' },
 ];
@@ -90,9 +90,9 @@ export const WelcomeSection = ({
   eyebrow = 'Local Expertise · Trusted Guidance · Better Real Estate Decisions',
   // Deliberate break: "Welcome to" is the greeting, the name is the statement.
   heading = 'Welcome to\nDeep Real Estate',
-  lead = 'With over two decades of experience in Gurgaon’s real estate market, Deep Real Estate is built on trust, transparency, and long-term relationships. Founded by Pawan Yadav, we help clients buy, sell, and invest in premium residential and commercial properties across Gurgaon.',
+  lead = 'With over two decades of experience in Gurugram’s real estate market, Deep Real Estate is built on trust, transparency, and long-term relationships. Founded by Pawan Yadav, we help clients buy, sell, and invest in premium residential and commercial properties across Gurugram.',
   trustTitle = 'Licensed & transparent',
-  trustNote = 'Serving Gurgaon since 2005',
+  trustNote = 'Serving Gurugram since 2005',
   imageSrc,
   imageAlt = '',
   images = defaultGallery,

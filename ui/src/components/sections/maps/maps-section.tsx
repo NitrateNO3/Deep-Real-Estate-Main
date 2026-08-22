@@ -30,7 +30,7 @@ export type MapsSectionProps = {
 const defaultMaps: MapCard[] = [
   {
     id: 'gurgaon-master-plan',
-    name: 'Gurgaon Master Plan',
+    name: 'Gurugram Master Plan',
     detail: 'Sector zoning · land use',
     image: '/img/maps/gurgaon-master-plan.jpg',
   },
@@ -59,7 +59,7 @@ const defaultMaps: MapCard[] = [
 export const MapsSection = ({
   eyebrow = 'Maps & Master Plans',
   heading = 'Explore sectors and master plans before you invest',
-  lede = 'Access master plans for Gurgaon, Manesar, Dharuhera and Sohna, plus HUDA sector maps, DLF phases, Sushant Lok, Vatika, South City and dozens of builder projects — all in one organized library.',
+  lede = 'Access master plans for Gurugram, Manesar and Dharuhera, plus HUDA sector maps, DLF phases, Sushant Lok, South City and dozens of builder projects — all in one organized library.',
   maps = defaultMaps,
   ctaLabel = 'Explore all maps',
   ctaHref = '#maps-page',

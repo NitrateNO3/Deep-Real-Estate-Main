@@ -14,8 +14,8 @@ export type AboutIntroProps = {
    text, which claimed "the industry's top talent with technology" twice in
    three paragraphs and never once named the person who founded the place. */
 const defaultParagraphs = [
-  'Since 2005, Deep Real Estate has been serving clients across Gurgaon with a commitment to honest advice, market knowledge, and personalised service.',
-  'Founded by Pawan Yadav, our firm has grown through strong client relationships and an in-depth understanding of Gurgaon’s evolving real estate landscape.',
+  'Since 2005, Deep Real Estate has been serving clients across Gurugram with a commitment to honest advice, market knowledge, and personalised service.',
+  'Founded by Pawan Yadav, our firm has grown through strong client relationships and an in-depth understanding of Gurugram’s evolving real estate landscape.',
   'From finding the right property to negotiating the right deal, we provide end-to-end assistance with professionalism and transparency.',
 ];
 
@@ -30,7 +30,7 @@ export const AboutIntro = ({
   heading = 'Experience You Can Trust.',
   paragraphs = defaultParagraphs,
   imageSrc = '/img/about/office.jpg',
-  imageAlt = 'The Deep Real Estate office in Gurgaon',
+  imageAlt = 'The Deep Real Estate office in Gurugram',
   fill = false,
   className,
 }: AboutIntroProps) => {

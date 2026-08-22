@@ -36,11 +36,11 @@ export type AboutMissionProps = {
 const defaultPillars: Pillar[] = [
   {
     label: 'Our mission',
-    body: 'To help our clients make wise and profitable property decisions in Gurgaon — guiding every buyer and seller toward outcomes that genuinely serve their goals.',
+    body: 'To help our clients make wise and profitable property decisions in Gurugram — guiding every buyer and seller toward outcomes that genuinely serve their goals.',
   },
   {
     label: 'Our vision',
-    body: 'To stay the firm Gurgaon families and investors call first, and to be judged as much by the deals we advised against as by the ones we closed.',
+    body: 'To stay the firm Gurugram families and investors call first, and to be judged as much by the deals we advised against as by the ones we closed.',
   },
   {
     label: 'Our promise',
@@ -95,7 +95,7 @@ export const AboutMission = ({
   beliefs = defaultBeliefs,
   partnersEyebrow = 'Partner developers',
   partnersHeading = 'Trusted developer network',
-  partnersLede = "We work with Gurgaon's leading developers to bring you the widest choice of quality projects.",
+  partnersLede = "We work with Gurugram's leading developers to bring you the widest choice of quality projects.",
   partners = defaultPartners,
   ctaLine = "Let's find your next property",
   ctaNote = 'Talk to a licensed advisor today — no commission on free support.',

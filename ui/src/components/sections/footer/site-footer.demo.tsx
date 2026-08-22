@@ -79,7 +79,7 @@ export const HomePage = () => (
         Sized to its content — a band, not a screen. */}
     <section>
       <IndexCta
-        heading="Ready to buy or sell in Gurgaon?"
+        heading="Ready to buy or sell in Gurugram?"
         body="Get free, no-commission assistance from a licensed team."
         ctaLabel="Get in touch"
         ctaHref="#contact-page"
